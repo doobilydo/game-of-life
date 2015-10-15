@@ -23,6 +23,7 @@ class Cell(object):
     '''
     def __init__(self):
         self.state = 1 # Alive (1) or dead (0)
+        self.nextState = 0;
         self.neighbors = 0 # Living neighbors
         self.neighborsList = [] # List of neighbors
         self.name = ''
@@ -37,10 +38,17 @@ class Cell(object):
 
 
     '''
-    Causes this cell to cycle a tick and update its status.
+    Causes this cell to cycle a tick and update its  next status.
     '''
     def check(self):
-        self.state = self.tick()
+        self.checkNeighbors()
+        self.nextState = self.tick()
+
+    '''
+    Change to the next state.
+    '''
+    def grow(self):
+        self.state = self.nextState
 
 
     '''
@@ -61,8 +69,8 @@ class Cell(object):
         else:
             if self.neighbors == 3:
                 return 1 # reborn
-
-        return 0
+            else:
+                return 0
 
     '''
     Connect two cells as neighbors.
@@ -70,13 +78,10 @@ class Cell(object):
     def connect(self, cell):
         try:
             self.neighborsList.index(cell)
-            # self.checkNeighbors()
         except ValueError:
             self.neighborsList.append(cell)
             self.checkNeighbors()
-            cell.connect(self)
 
-        # self.checkNeighbors()
 
     '''
     Check neighbors for life.
@@ -87,11 +92,7 @@ class Cell(object):
         for neighbor in self.neighborsList:
             if neighbor.state == 1:
                 self.neighbors = self.neighbors + 1
-            #     # Increment for living neighbor
-            # elif neighbor.state == 0:
-            #     if self.neighbors > 0:
-            #         self.neighbors = self.neighbors - 1
-                    # Decrement for dead neighbor
+
 
     '''
     Print the current status of the Cell.
