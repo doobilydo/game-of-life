@@ -39,7 +39,7 @@ matrix = [[Cell() for x in range(rows)] for x in range(columns)]
 def main():
     print('%d x %d' % (rows, columns))
     init()
-    lifeCycle(3)
+    lifeCycle(10)
 
 
 '''
@@ -79,10 +79,10 @@ def initCells(cell, a, b):
     cell.name = 'Cell'
     cell.coord = '(%d,%d)' % (b, a)
 
-    # if b == 2 and a == 2:
-    #     cell.state = 1
-    # else:
-    #     cell.state = 1
+    if b == 2 and a == 2:
+        cell.state = 1
+    else:
+        cell.state = 0
 
 
 '''
@@ -110,31 +110,33 @@ cycles - Number of times to run
 def lifeCycle(cycles):
 
     for cycle in range(cycles):
-        time.sleep(.5)
+        time.sleep(1)
         sys.stderr.write("\x1b[2J\x1b[H")
 
-        print('\nCycle %d\n' %(cycle))
+        print('\nCycle %d\n' %(cycle + 1))
 
-        print('%d %d %d' % (i, (i+1), (i+2)))
-        print('%d %d %d' % (i, (i+1), (i+2)))
-        print('%d %d %d' % (i, (i+1), (i+2)))
+        # print('%d %d %d' % (i, (i+1), (i+2)))
+        # print('%d %d %d' % (i, (i+1), (i+2)))
+        # print('%d %d %d' % (i, (i+1), (i+2)))
 
-        iterateMatrix(cellCheck)
-        iterateMatrix(changeGeneration)
         # iterateMatrix(sanityCheck)
 
         b = initB
-        for row in matrix:
+        output = ''
 
+        for row in matrix:
             a = initA
             for cell in row:
-
-                # ????????
-
+                output = output + '%d ' % cell.state
                 a = a + 1
 
+            output = output + '\n'
             b = b + 1
 
+        print(output)
+
+        iterateMatrix(cellCheck)
+        iterateMatrix(changeGeneration)
 
 '''
 Have a cell check its neighbors and update its status accordingly.
@@ -187,4 +189,4 @@ def meetTheNeighbors(a, b, matrix, theta, currentCell):
 
 
 # Run the program
-# main()
+main()
