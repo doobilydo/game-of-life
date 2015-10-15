@@ -22,9 +22,19 @@ class Cell(object):
     Constructor
     '''
     def __init__(self):
-        self.state = 0 # Alive (true) or dead (false)
+        self.state = 1 # Alive (true) or dead (false)
         self.neighbors = 0 # Living neighbors
         self.neighborsList = [] # List of neighbors
+        self.name = ''
+        self.coord = ''
+
+    '''
+    Return full name.
+    '''
+    @property
+    def fullName(self):
+        return self.name + ' ' + self.coord
+
 
     '''
     Causes this cell to cycle a tick and update its status.
@@ -32,7 +42,7 @@ class Cell(object):
     def check(self):
         state = self.tick()
 
-    
+
     '''
     Get the new status of the cell (alive or dead).
     A 'tick' is one life-cycle.
@@ -62,12 +72,16 @@ class Cell(object):
             self.neighborsList.index(cell)
         except ValueError:
             self.neighborsList.append(cell)
+            self.checkNeighbors()
             cell.connect(self)
+
 
     '''
     Check neighbors for life.
     '''
     def checkNeighbors(self):
+        self.neighbors = 0 # Reset to zero. Fresh check.
+
         for neighbor in self.neighborsList:
             if neighbor.state == 1:
                 self.neighbors = self.neighbors + 1
@@ -77,8 +91,13 @@ class Cell(object):
                     self.neighbors = self.neighbors - 1
                     # Decrement for dead neighbor
 
+    '''
+    Print the current status of the Cell.
+    '''
+    def printStatus(self):
+        print('Name: %s...State: %d...# of neighbors: %d\n'
+        % (self.fullName, self.state, self.neighbors))
 
-        
 '''
 A 2-dimensional cell (c) and its neighbors (n)
 
