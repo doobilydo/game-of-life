@@ -22,7 +22,7 @@ class Cell(object):
     Constructor
     '''
     def __init__(self):
-        self.state = 1 # Alive (true) or dead (false)
+        self.state = 1 # Alive (1) or dead (0)
         self.neighbors = 0 # Living neighbors
         self.neighborsList = [] # List of neighbors
         self.name = ''
@@ -40,7 +40,7 @@ class Cell(object):
     Causes this cell to cycle a tick and update its status.
     '''
     def check(self):
-        state = self.tick()
+        self.state = self.tick()
 
 
     '''
@@ -70,11 +70,13 @@ class Cell(object):
     def connect(self, cell):
         try:
             self.neighborsList.index(cell)
+            # self.checkNeighbors()
         except ValueError:
             self.neighborsList.append(cell)
             self.checkNeighbors()
             cell.connect(self)
 
+        # self.checkNeighbors()
 
     '''
     Check neighbors for life.
@@ -85,10 +87,10 @@ class Cell(object):
         for neighbor in self.neighborsList:
             if neighbor.state == 1:
                 self.neighbors = self.neighbors + 1
-                # Increment for living neighbor
-            elif neighbor.state == 0:
-                if self.neighbors > 0:
-                    self.neighbors = self.neighbors - 1
+            #     # Increment for living neighbor
+            # elif neighbor.state == 0:
+            #     if self.neighbors > 0:
+            #         self.neighbors = self.neighbors - 1
                     # Decrement for dead neighbor
 
     '''
