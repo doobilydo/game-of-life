@@ -36,7 +36,6 @@ class Cell(object):
     def fullName(self):
         return self.name + ' ' + self.coord
 
-
     '''
     Causes this cell to cycle a tick and update its  next status.
     '''
@@ -49,7 +48,6 @@ class Cell(object):
     '''
     def grow(self):
         self.state = self.nextState
-
 
     '''
     Get the new status of the cell (alive or dead).
@@ -82,7 +80,6 @@ class Cell(object):
             self.neighborsList.append(cell)
             self.checkNeighbors()
 
-
     '''
     Check neighbors for life.
     '''
@@ -92,7 +89,6 @@ class Cell(object):
         for neighbor in self.neighborsList:
             if neighbor.state == 1:
                 self.neighbors = self.neighbors + 1
-
 
     '''
     Print the current status of the Cell.

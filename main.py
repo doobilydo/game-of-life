@@ -12,9 +12,14 @@ from patterns import *
 coordA = {0:+1, 0.25:+1, 0.5:0, 0.75:-1, 1:-1, 1.25:-1, 1.5:0, 1.75:+1}
 coordB = {0:0, 0.25:-1, 0.5:-1, 0.75:-1, 1:0, 1.25:+1, 1.5:+1, 1.75:+1}
 
-# range
-rows = 5
-columns = 5
+'''
+Modify these variables for changing conditions.
+'''
+square = 20
+rows = square
+columns = square
+lifeCycles = 150
+sleepDuration = .1 # Time of lifecycle
 
 # initial index of matrix
 initB = 0
@@ -27,7 +32,7 @@ Entry point.
 '''
 def main():
     init()
-    lifeCycle(3)
+    lifeCycle(lifeCycles)
 
 '''
 Initialize Cells and neighbors.
@@ -43,11 +48,12 @@ Run a life cycle.
 cycles - Number of times to run
 '''
 def lifeCycle(cycles):
-    for cycle in range(cycles):
-        time.sleep(1)
-        sys.stderr.write("\x1b[2J\x1b[H")
+    for cycle in range(cycles + 1):
+        time.sleep(sleepDuration) # sleep
+        sys.stderr.write("\x1b[2J\x1b[H") # clear screen
 
-        print('%d x %d\n' % (rows, columns))
+        # print condition information
+        print('%d x %d, Cycles: %d, Speed: %d.2' % (rows, columns, lifeCycles, sleepDuration))
         print('\nCycle %d\n' %(cycle))
 
         b = initB
@@ -57,16 +63,25 @@ def lifeCycle(cycles):
             for cell in row:
 
                 # Output state in a grid
-                output = output + '%d ' % cell.state
+                if cell.state == 1:
+                    # '\033[1m' = bold
+                    # '\033[94m' = blue
+                    # '\033[0m' = back to normal
+                    output = output + '\033[1m' + '\033[94m' + '%d ' % cell.state + '\033[0m'
+                    # output = output + '%d ' % cell.state
+                else:
+                    # '\033[91m' = red
+                    output = output + '\033[91m' + '%d ' % cell.state + '\033[0m'
+                    # output = output + '%d ' % cell.state
                 cell.check()
-                cell.grow()
+                # cell.grow()
                 a = a + 1
 
             output = output + '\n'
             b = b + 1
 
         print(output)
-
+        iterateMatrix(changeGeneration)
 '''
 Iterate over the matrix of cells.
 '''
@@ -93,7 +108,7 @@ def consolidatedInit(cell, a, b):
     meetTheNeighbors(a, b, matrix, 0, cell)
 
     pattern = getPattern()
-    pattern(a,b, cell)
+    pattern(b, a, cell)
 
 '''
 Name and number the cells.
@@ -117,8 +132,8 @@ Have a cell check its neighbors and update its status accordingly.
 '''
 Advance each cell to the next generation.
 '''
-# def changeGeneration(cell, a, b):
-#     cell.grow()
+def changeGeneration(cell, a, b):
+    cell.grow()
 
 '''
 Check immediate surroundings for existing neighbors.
