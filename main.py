@@ -39,7 +39,7 @@ matrix = [[Cell() for x in range(rows)] for x in range(columns)]
 def main():
     print('%d x %d' % (rows, columns))
     init()
-    lifeCycle(10)
+    lifeCycle(3)
 
 
 '''
@@ -48,13 +48,46 @@ Initialize Cells and neighbors.
 def init():
     print('Initialize...\n')
 
+    iterateMatrix(consolidatedInit)
     # First, name each Cell (for convenience).
     iterateMatrix(initCells)
 
     # Second, meet each neighbor.
-    iterateMatrix(initNeighbors)
+    # iterateMatrix(initNeighbors)
 
-    iterateMatrix(sanityCheck)
+    # iterateMatrix(sanityCheck)
+
+'''
+Run a life cycle.
+
+cycles - Number of times to run
+'''
+def lifeCycle(cycles):
+
+    for cycle in range(cycles):
+        time.sleep(1)
+        sys.stderr.write("\x1b[2J\x1b[H")
+
+        print('\nCycle %d\n' %(cycle + 1))
+
+        b = initB
+        output = ''
+
+        for row in matrix:
+            a = initA
+            for cell in row:
+
+                # Output state in a grid
+                output = output + '%d ' % cell.state
+                a = a + 1
+
+            output = output + '\n'
+            b = b + 1
+
+        print(output)
+
+        iterateMatrix(cellCheck)
+        iterateMatrix(changeGeneration)
 
 '''
 Iterate over the matrix of cells.
@@ -72,6 +105,31 @@ def iterateMatrix(function):
 
         b = b + 1
 
+
+def consolidatedInit(cell, a, b):
+    cell.name = 'Cell'
+    cell.coord = '(%d,%d)' % (b, a)
+
+    meetTheNeighbors(a, b, matrix, 0, cell)
+    cell.check()
+
+    pattern2(a,b, cell)
+
+
+def pattern1(a,b, cell):
+    if b == 2 and a == 2:
+        cell.state = 1
+    else:
+        cell.state = 0
+
+
+def pattern2(a,b, cell):
+    if b == a:
+        cell.state = 1
+    else:
+        cell.state = 0
+
+
 '''
 Name and number the cells.
 '''
@@ -79,19 +137,11 @@ def initCells(cell, a, b):
     cell.name = 'Cell'
     cell.coord = '(%d,%d)' % (b, a)
 
-    if b == 2 and a == 2:
-        cell.state = 1
-    else:
-        cell.state = 0
-
 
 '''
 Have each cell find and connect with its neighbors,
 '''
 def initNeighbors(cell, a, b):
-    # print('row = %d (Columns: %d)\n' % (b, len(row)))
-
-    # print('Column=%d, Search for neighbors...' % a) # Print cell initial
     meetTheNeighbors(a, b, matrix, 0, cell)
 
 
@@ -101,42 +151,6 @@ Print each cell's status.
 def sanityCheck(cell, a, b):
     cell.printStatus()
 
-
-'''
-Run a life cycle.
-
-cycles - Number of times to run
-'''
-def lifeCycle(cycles):
-
-    for cycle in range(cycles):
-        time.sleep(1)
-        sys.stderr.write("\x1b[2J\x1b[H")
-
-        print('\nCycle %d\n' %(cycle + 1))
-
-        # print('%d %d %d' % (i, (i+1), (i+2)))
-        # print('%d %d %d' % (i, (i+1), (i+2)))
-        # print('%d %d %d' % (i, (i+1), (i+2)))
-
-        # iterateMatrix(sanityCheck)
-
-        b = initB
-        output = ''
-
-        for row in matrix:
-            a = initA
-            for cell in row:
-                output = output + '%d ' % cell.state
-                a = a + 1
-
-            output = output + '\n'
-            b = b + 1
-
-        print(output)
-
-        iterateMatrix(cellCheck)
-        iterateMatrix(changeGeneration)
 
 '''
 Have a cell check its neighbors and update its status accordingly.

@@ -60,7 +60,7 @@ class Cell(object):
         if self.state == 1:
             if self.neighbors < 2:
                 return 0 # dead
-            if self.neighbors == 2 | self.neighbors == 3:
+            if self.neighbors == 2 or self.neighbors == 3:
                 return 1 # alive
             if self.neighbors > 3:
                 return 0 # dead
