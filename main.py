@@ -15,16 +15,16 @@ coordB = {0:0, 0.25:-1, 0.5:-1, 0.75:-1, 1:0, 1.25:+1, 1.5:+1, 1.75:+1}
 '''
 Modify these variables for changing conditions.
 '''
-square = 20
-rows = square
-columns = square
-lifeCycles = 150
+square = 50
+rows = 48
+columns = 100
+lifeCycles = 600
 sleepDuration = .1 # Time of lifecycle
 
 # initial index of matrix
 initB = 0
 initA = 0
-matrix = [[Cell() for x in range(rows)] for x in range(columns)]
+matrix = [[Cell() for x in range(columns)] for x in range(rows)]
 
 
 '''
@@ -53,8 +53,10 @@ def lifeCycle(cycles):
         sys.stderr.write("\x1b[2J\x1b[H") # clear screen
 
         # print condition information
-        print('%d x %d, Cycles: %d, Speed: %d.2' % (rows, columns, lifeCycles, sleepDuration))
-        print('\nCycle %d\n' %(cycle))
+        patternUsed = getPattern().__name__
+        print('%d x %d, Pattern: ' % (rows, columns) + patternUsed),
+        print(', Cycles: %d, Speed: %d.2' % (lifeCycles, sleepDuration)),
+        print('Cycle %d\n' %(cycle))
 
         b = initB
         output = ''
@@ -64,14 +66,25 @@ def lifeCycle(cycles):
 
                 # Output state in a grid
                 if cell.state == 1:
-                    # '\033[1m' = bold
-                    # '\033[94m' = blue
-                    # '\033[0m' = back to normal
-                    output = output + '\033[1m' + '\033[94m' + '%d ' % cell.state + '\033[0m'
+                    '''
+                    89 = white
+                    90 = gray
+                    91 = red
+                    92 = lime green
+                    93 = yellow
+                    94 = blue
+                    95 = magenta
+                    96 = cyan
+                    97 = white
+                    '\033[1m' = bold
+                    '\033[94m' = blue
+                    '\033[0m' = back to normal
+                    '''
+                    output = output + '\033[1m' + '\033[91m' + '%d ' % cell.state + '\033[0m'
                     # output = output + '%d ' % cell.state
                 else:
                     # '\033[91m' = red
-                    output = output + '\033[91m' + '%d ' % cell.state + '\033[0m'
+                    output = output + '\033[90m' + '%d ' % cell.state + '\033[0m'
                     # output = output + '%d ' % cell.state
                 cell.check()
                 # cell.grow()
