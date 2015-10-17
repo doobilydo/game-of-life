@@ -18,10 +18,27 @@ Modify these variables for changing conditions.
 square = 50
 rows = 48
 columns = 50
-lifeCycles = 250
+lifeCycles = 1000
 sleepDuration = .1 # Time of lifecycle
-holdCount = 50
+holdCount = 10
 hold = 'true'
+
+# colors
+livingCell = '\033[90m'
+deadCell = '\033[97m'
+'''
+89 = white
+90 = gray
+91 = red
+92 = lime green
+93 = yellow
+94 = purple
+95 = magenta
+96 = cyan
+97 = white
+'\033[1m' = bold
+'\033[0m' = back to normal
+'''
 
 # initial index of matrix
 initB = 0
@@ -68,26 +85,9 @@ def lifeCycle(cycles):
 
                 # Output state in a grid
                 if cell.state == 1:
-                    '''
-                    89 = white
-                    90 = gray
-                    91 = red
-                    92 = lime green
-                    93 = yellow
-                    94 = purple
-                    95 = magenta
-                    96 = cyan
-                    97 = white
-                    '\033[1m' = bold
-                    '\033[94m' = blue
-                    '\033[0m' = back to normal
-                    '''
-                    output = output + '\033[1m' + '\033[97m' + '%d ' % cell.state + '\033[0m'
-                    # output = output + '%d ' % cell.state
+                    output = output + '\033[1m' +  livingCell + '%d ' % cell.state + '\033[0m'
                 else:
-                    # '\033[91m' = red
-                    output = output + '\033[90m' + '%d ' % cell.state + '\033[0m'
-                    # output = output + '%d ' % cell.state
+                    output = output + deadCell + '%d ' % cell.state + '\033[0m'
                 cell.check()
                 a = a + 1
 

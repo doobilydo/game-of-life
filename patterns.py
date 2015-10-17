@@ -1,15 +1,15 @@
 
 '''
-Define which pattern to utilize.
-'''
-def getPattern():
-    return pattern12
-
-'''
 Noteable patterns:
 pattern4
 pattern4b
 '''
+
+'''
+Define which pattern to utilize.
+'''
+def getPattern():
+    return pattern4b
 
 '''
 Coordinate 2,2 is alive.
