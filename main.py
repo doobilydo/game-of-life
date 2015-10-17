@@ -18,7 +18,7 @@ Modify these variables for changing conditions.
 square = 50
 rows = 48
 columns = 100
-lifeCycles = 600
+lifeCycles = 1000000
 sleepDuration = .1 # Time of lifecycle
 
 # initial index of matrix
@@ -55,7 +55,7 @@ def lifeCycle(cycles):
         # print condition information
         patternUsed = getPattern().__name__
         print('%d x %d, Pattern: ' % (rows, columns) + patternUsed),
-        print(', Cycles: %d, Speed: %d.2' % (lifeCycles, sleepDuration)),
+        print(', Cycles: %d, Length of cycle: %d.2 seconds, ' % (lifeCycles, sleepDuration)),
         print('Cycle %d\n' %(cycle))
 
         b = initB
@@ -80,7 +80,7 @@ def lifeCycle(cycles):
                     '\033[94m' = blue
                     '\033[0m' = back to normal
                     '''
-                    output = output + '\033[1m' + '\033[91m' + '%d ' % cell.state + '\033[0m'
+                    output = output + '\033[1m' + '\033[96m' + '%d ' % cell.state + '\033[0m'
                     # output = output + '%d ' % cell.state
                 else:
                     # '\033[91m' = red
