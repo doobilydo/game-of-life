@@ -3,7 +3,7 @@
 Define which pattern to utilize.
 '''
 def getPattern():
-    return pattern4b
+    return pattern4c
 
 '''
 Noteable patterns:
@@ -135,6 +135,20 @@ def pattern4b(b, a, cell):
     coord = '%d,%d' % (b,a)
 
     dict = {'20,21':1, '21,20':1, '21,21':1, '22,20':1, '24,21':1, '24,22':1, '25,21':1, '21,24':1, '21,25':1, '21,22':1, '24,24':1, '23,24':1, '24,23':1}
+
+    if(coord in dict):
+        cell.state = 1
+    else:
+        cell.state = 0
+
+'''
+Pattern4, increased by 20 on B axis and 40 on A axis. Things brings it more to the center.
+Lasted about 450 cycles.
+'''
+def pattern4c(b, a, cell):
+    coord = '%d,%d' % (b,a)
+
+    dict = {'20,41':1, '21,40':1, '21,41':1, '22,40':1, '24,41':1, '24,42':1, '25,41':1, '21,44':1, '21,45':1, '21,42':1, '24,44':1, '23,44':1, '24,43':1}
 
     if(coord in dict):
         cell.state = 1
