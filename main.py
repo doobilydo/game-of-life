@@ -17,9 +17,11 @@ Modify these variables for changing conditions.
 '''
 square = 50
 rows = 48
-columns = 100
-lifeCycles = 1000000
+columns = 50
+lifeCycles = 250
 sleepDuration = .1 # Time of lifecycle
+holdCount = 50
+hold = 'true'
 
 # initial index of matrix
 initB = 0
@@ -72,7 +74,7 @@ def lifeCycle(cycles):
                     91 = red
                     92 = lime green
                     93 = yellow
-                    94 = blue
+                    94 = purple
                     95 = magenta
                     96 = cyan
                     97 = white
@@ -80,21 +82,25 @@ def lifeCycle(cycles):
                     '\033[94m' = blue
                     '\033[0m' = back to normal
                     '''
-                    output = output + '\033[1m' + '\033[96m' + '%d ' % cell.state + '\033[0m'
+                    output = output + '\033[1m' + '\033[97m' + '%d ' % cell.state + '\033[0m'
                     # output = output + '%d ' % cell.state
                 else:
                     # '\033[91m' = red
                     output = output + '\033[90m' + '%d ' % cell.state + '\033[0m'
                     # output = output + '%d ' % cell.state
                 cell.check()
-                # cell.grow()
                 a = a + 1
 
             output = output + '\n'
             b = b + 1
 
         print(output)
-        iterateMatrix(changeGeneration)
+
+        if cycle < holdCount and hold == 'true':
+            pass
+        else:
+            iterateMatrix(changeGeneration)
+
 '''
 Iterate over the matrix of cells.
 '''

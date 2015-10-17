@@ -3,7 +3,7 @@
 Define which pattern to utilize.
 '''
 def getPattern():
-    return pattern4c
+    return pattern12
 
 '''
 Noteable patterns:
@@ -142,13 +142,86 @@ def pattern4b(b, a, cell):
         cell.state = 0
 
 '''
-Pattern4, increased by 20 on B axis and 40 on A axis. Things brings it more to the center.
-Lasted about 450 cycles.
+A symetrical version of pattern4. Went nowhere.
 '''
-def pattern4c(b, a, cell):
+def pattern8(b, a, cell):
     coord = '%d,%d' % (b,a)
 
-    dict = {'20,41':1, '21,40':1, '21,41':1, '22,40':1, '24,41':1, '24,42':1, '25,41':1, '21,44':1, '21,45':1, '21,42':1, '24,44':1, '23,44':1, '24,43':1}
+    dict = {'20,41', '21,40', '20,42', '20,40', '22,40', '22,44', '24,41', '24,42', '25,41', '21,44', '21,45', '24,44', '23,44', '24,43'}
+
+    if(coord in dict):
+        cell.state = 1
+    else:
+        cell.state = 0
+
+'''
+Pattern4 upper left triangle inverted along the (1,1) axis.
+Stale at about 120 cycles.
+'''
+def pattern9(b, a, cell):
+    coord = '%d,%d' % (b,a)
+
+    dict = {'20,41', '21,40', '19,41', '20,40', '21,39', '24,41', '24,42', '25,41', '21,44', '21,45', '24,44', '23,44', '24,43'}
+
+    if(coord in dict):
+        cell.state = 1
+    else:
+        cell.state = 0
+
+'''
+Pattern4 upper left triangle inverted along the (1,1) axis. All symetrical.
+Died at about 10 cycles.
+(Keep as template)
+'''
+def pattern10(b, a, cell):
+    coord = '%d,%d' % (b,a)
+
+    dict = {'20,41', '21,40', '19,41', '20,40', '21,39',
+    '22,44', '24,41', '24,42', '25,41', '21,44', '21,45', '24,44', '23,44', '24,43' }
+
+    if(coord in dict):
+        cell.state = 1
+    else:
+        cell.state = 0
+
+'''
+Pattern4 upper left triangle inverted along the (1,1) axis.
+Symmetry is bad.
+'''
+def pattern11(b, a, cell):
+    coord = '%d,%d' % (b,a)
+
+    dict = {'20,41', '21,40', '19,41', '20,40', '21,39',
+    '21,44', '21,45', '22,44', '23,44', '24,41', '24,42', '24,43', '24,44', '25,41', }
+
+    if(coord in dict):
+        cell.state = 1
+    else:
+        cell.state = 0
+
+
+'''
+Happy Birthday!!
+'''
+def pattern12(b, a, cell):
+    coord = '%d,%d' % (b,a)
+
+    dict = {'15,10', '16,10', '17,10', '16,11', '15,12', '16,12', '17,12', # H
+    '15,14', '16,14', '17,14', '15,15', '16,15', '15,16', '16,16', '17,16', # A
+    '15,18', '16,18', '17,18', '15,19', '16,19', '15,20', '16,20', # P
+    '15,22', '16,22', '17,22', '15,23', '16,23', '15,24', '16,24', # P
+    '15,26', '16,27', '17,27', '15,28', # Y
+    '19,4', '18,4', '19,5', '20,4', '21,4', '22,4',  '20,5', '20,6',  '21,5', '22,5', '22,6', '23,4', '24,4', '23,5', # B
+    '20,8', '20,9', '21,9', '22,9', '20,10', '22,8', '22,9', '22,10', # I
+    '20,12', '21,12', '22,12', '23,12', '20,13', '21,13', '20,14', '21,14', '22,13', '23,14', # R
+    '20,16', '20,17', '20,18', '21,17', '22,17', # T
+    '20,20', '21,20', '22,20', '21,21', '20,22', '21,22', '22,22', # H
+    '20,24', '21,24', '22,24', '20,25', '22,25', '21,26', # D
+    '20,28', '21,28', '22,28', '20,29', '21,29', '20,30', '21,30', '22,30', # A
+    '20,32', '21,33', '22,33', '20,34', # Y
+    '19,36', '20,36', '21,36', '22,36', '24,36', #!
+    '19,38', '20,38', '21,38', '22,38', '24,38' #!
+    }
 
     if(coord in dict):
         cell.state = 1
