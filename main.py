@@ -59,7 +59,7 @@ Initialize Cells and neighbors.
 def init():
     print('Initialize...%d x %d\n' % (rows, columns))
 
-    iterateMatrix(consolidatedInit)
+    iterateMatrix(initCells)
 
 '''
 Run a life cycle.
@@ -120,7 +120,7 @@ def iterateMatrix(function):
 '''
 Initialize naming, neighbors, and states in one iteration.
 '''
-def consolidatedInit(cell, a, b):
+def initCells(cell, a, b):
     cell.name = 'Cell'
     cell.coord = '(%d,%d)' % (b, a)
 
@@ -128,25 +128,6 @@ def consolidatedInit(cell, a, b):
 
     pattern = getPattern()
     pattern(b, a, cell)
-
-'''
-Name and number the cells.
-'''
-# def initCells(cell, a, b):
-#     cell.name = 'Cell'
-#     cell.coord = '(%d,%d)' % (b, a)
-
-'''
-Have each cell find and connect with its neighbors,
-'''
-# def initNeighbors(cell, a, b):
-#     meetTheNeighbors(a, b, matrix, 0, cell)
-
-'''
-Have a cell check its neighbors and update its status accordingly.
-'''
-# def cellCheck(cell, a, b):
-#     cell.check()
 
 '''
 Advance each cell to the next generation.
@@ -160,17 +141,15 @@ Check immediate surroundings for existing neighbors.
 
 a - A position
 b - B position
-matrixB - List of data
-θ - Angle pointing to next neighbor (measured in radians, quarter increments of pi)
+matrix - List of data
+theta - Angle pointing to next neighbor (measured in radians, quarter increments of pi)
+currentCell - Cell in iteration
 '''
 def meetTheNeighbors(a, b, matrix, theta, currentCell):
     output = ''
     try:
         A = a + coordA[theta] # Cell's 'a' coord plus 'A' distance of neighbor
         B = b + coordB[theta] # Cell's 'b' coord plus 'B' distance of neighbor
-
-        # Add output for the log
-        # output = 'θ(%.2fπ) Bₙ(%d) Aₙ(%d)' % (theta, B, A)
 
         if B >= initB or A >= initA: # Anything negative should not be counted
             N = matrix[B][A] # Set neighbor
