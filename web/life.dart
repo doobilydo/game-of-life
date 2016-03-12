@@ -2,7 +2,7 @@ library gameoflife;
 
 import 'globals.dart' as life;
 import 'ui.dart' as ui;
-import 'patterns.dart' as pattern;
+
 import 'Cell.dart';
 import 'dart:html';
 import 'dart:async';
@@ -12,8 +12,6 @@ import 'dart:async';
 /// [https://dart-atom.github.io/dartlang/]
 /// [https://www.dartlang.org/docs/tutorials/connect-dart-html/#about-css-selectors]
 /// [https://www.dartlang.org/docs/tutorials/using-polymer/]
-///
-
 void main() {
   print('Starting...');
 
@@ -24,9 +22,22 @@ void main() {
 
   /// Event handler for 'Start' button.
   void clickStart(Event event) {
+    life.cancel = true;
     lifeCycle(life.lifeCycles);
   }
   querySelector('#start').addEventListener('click', clickStart, false);
+
+  /// Event handler for 'Pause' button.
+  void clickPause(Event event) {
+    life.cancel = false;
+  }
+  querySelector('#pause').addEventListener('click', clickPause, false);
+
+  /// Event handler for 'Start' button.
+  void clickIncrement(Event event) {
+    lifeCycle(1);
+  }
+  querySelector('#increment').addEventListener('click', clickIncrement, false);
 
   return;
 }
@@ -47,15 +58,12 @@ void init() {
 
   // Create each cell
   initCells();
-
+  // Display each initialized cell
   display(0);
-  lifeCycle(life.lifeCycles);
 }
 
 /// Execute a lifecycle.
 void lifeCycle(int cycles) {
-  int cycle = 1;
-
   void refresh() {
     /// Check for living neighbors
     void check(Cell cell) {
@@ -72,34 +80,26 @@ void lifeCycle(int cycles) {
     life.livingCells = 0;
   }
 
-  timedCycle() {
-    // while (cycle <= life.lifeCycles) {
-      refresh(); // Change state
-      display(cycle); // Display the new state
-      print("${cycle} Cycle complete.");
-      cycle++;
-    // }
+  runCycle() {
+    refresh(); // Change state
+    display(life.cyclesSoFar); // Display the new state
 
-  }
-
-  startTimeout() {
-    while (cycle <= life.lifeCycles) {
-    new Timer(life.sleepDuration, timedCycle);
+    life.cyclesSoFar++;
+    if (life.livingCells == 0) {
+      life.cancel = true;
+    }
+    if ((life.cancel) && (life.cyclesSoFar <= cycles)) {
+      new Future.delayed(life.sleepDuration, () {
+        runCycle();
+      });
     }
   }
-
-  startTimeout();
-
-  // print("End Cycle: ${cycle}");
-  // if (life.livingCells == 0) {
-  //     life.lastCycle = cycle;
-  //     cycle = cycles + 1;
-  // } else {
-  //
-
-  // }
-
-  // TODO: Set timeout
+  // Only allow the maximum number of life cycles.
+  if (life.cyclesSoFar <= life.lifeCycles) {
+    new Future.delayed(life.sleepDuration, () {
+      runCycle();
+    });
+  }
 }
 
 /// Initialize naming, neighbors, and states in one iteration.
@@ -116,7 +116,7 @@ void initCells() {
       cell.coordY = y;
 
       // Use a user defined pattern
-      pattern.pattern4b(cell);
+      life.initPattern(cell);
     }
   }
   // After each cell is created, go around again and meet the neighbors.
@@ -128,7 +128,6 @@ void meetTheNeighbors(Cell cell) {
   double theta = 0.0;
 
   while (theta < 1.75) {
-    // String coord = this.coordX + ',' + this.coordY;
     int X = cell.coordX + life.coordA[theta];
     int Y = cell.coordY + life.coordB[theta];
 
@@ -137,7 +136,6 @@ void meetTheNeighbors(Cell cell) {
       cell.connect(N);
     } catch (RangeError) {
       // Do nothing. Neighbor doesn't exist.
-      // print("Neighbor doesn't exist");
     }
     theta = theta + 0.25;
   }
