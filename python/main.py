@@ -15,17 +15,17 @@ coordB = {0:0, 0.25:-1, 0.5:-1, 0.75:-1, 1:0, 1.25:+1, 1.5:+1, 1.75:+1}
 '''
 Modify these variables for changing conditions.
 '''
-square = 50
-rows = 48
-columns = 50
-lifeCycles = 1000
-sleepDuration = .1 # Time of lifecycle
-holdCount = 10
+square = 50 # Use this for 'rows' and 'columns' if you want a square
+rows = square
+columns = square
+lifeCycles = 10000
+sleepDuration = .05 # Time of lifecycle
+holdCount = 0
 hold = 'true'
 
 # colors
-livingCell = '\033[90m'
-deadCell = '\033[97m'
+livingCell = '\033[96m'
+deadCell = '\033[90m'
 '''
 89 = white
 90 = gray
@@ -74,7 +74,7 @@ def lifeCycle(cycles):
         # print condition information
         patternUsed = getPattern().__name__
         print('%d x %d, Pattern: ' % (rows, columns) + patternUsed),
-        print(', Cycles: %d, Length of cycle: %d.2 seconds, ' % (lifeCycles, sleepDuration)),
+        print(', Cycles: %d, Length of cycle: %.2f seconds, ' % (lifeCycles, sleepDuration)),
         print('Cycle %d\n' %(cycle))
 
         b = initB
@@ -88,7 +88,7 @@ def lifeCycle(cycles):
                     output = output + '\033[1m' +  livingCell + '%d ' % cell.state + '\033[0m'
                 else:
                     output = output + deadCell + '%d ' % cell.state + '\033[0m'
-                cell.check()
+                # cell.check()
                 a = a + 1
 
             output = output + '\n'
@@ -99,6 +99,17 @@ def lifeCycle(cycles):
         if cycle < holdCount and hold == 'true':
             pass
         else:
+            b = initB
+            for row in matrix:
+
+                a = initA
+                for cell in row:
+
+                    cell.check()
+
+                    a = a + 1
+
+                b = b + 1
             iterateMatrix(changeGeneration)
 
 '''

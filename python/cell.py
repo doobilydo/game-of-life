@@ -23,7 +23,7 @@ class Cell(object):
     '''
     def __init__(self):
         self.state = 1 # Alive (1) or dead (0)
-        self.nextState = 0;
+        self.nextState = 0
         self.neighbors = 0 # Living neighbors
         self.neighborsList = [] # List of neighbors
         self.name = ''
