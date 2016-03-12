@@ -12,7 +12,7 @@ void displayStats(cycle) {
       Last cycle: ${life.lastCycle}, Living cells: ${life.livingCells}<br>
       ''';
 
-  life.stats.innerHTML = stats;
+  life.stats.setInnerHtml(stats);
 }
 
 // Draw the cell.
@@ -25,7 +25,7 @@ void drawCell(int x, y, bool living) {
 // Get the canvas element
 CanvasElement getCanvas() {
   // console.log('function', 'getCanvas');
-  return document.getElementById('canvas');
+  return querySelector('#canvas');
 }
 
 // Clear the canvas

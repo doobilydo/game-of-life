@@ -3,14 +3,9 @@ class Cell {
   int state = 1; // Alive (1) or dead (0)
   int nextState = 0;
   int neighbors = 0; // Living neighbors
-  var neighborsList = []; // List of neighbors
+  var neighborsList = new List<Cell>(); // List of neighbors
   int coordX = 0;
   int coordY = 0;
-
-  /// Advance each cell to the next generation.
-  void changeGeneration() {
-    this.grow();
-  }
 
   /// Check the neighbors and change state accordingly.
   void check() {
@@ -31,23 +26,22 @@ class Cell {
   /// Connect two cells as neighbors.
   void connect(Cell N) {
     if (this.neighborsList.indexOf(N) == -1) {
-      this.neighborsList.push(N);
+      this.neighborsList.add(N);
     }
   }
 
   /// Check neighbors for life.
   void checkNeighbors() {
-    // console.log('function', 'checkNeighbors');
     this.neighbors = 0;
-    // console.log(this.neighborsList);
-    for (var neighbor = 0; neighbor < this.neighborsList.length; neighbor++) {
-      Cell N = this.neighborsList[neighbor];
 
-      if (N.state == 1) {
+    for (var neighbor in this.neighborsList) {
+      if (neighbor.state == 1) {
         this.neighbors = this.neighbors + 1;
       }
     }
-    // console.log(this.neighbors);
+    // if (this.neighbors > 0) {
+    //   print('${this.getName()}: ${this.neighbors}');
+    // }
   }
 
   /// Get the new status of the cell (alive or dead).
