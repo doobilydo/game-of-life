@@ -26,7 +26,7 @@ int lifeCycles = 1000;
 int cyclesSoFar = 0;
 final sleepDuration = const Duration(milliseconds: 50);
 
-var initPattern = pattern.pattern4b;
+var initPattern = pattern.patternD4a;
 
 int livingCells = 0;
 int lastCycle = 0;

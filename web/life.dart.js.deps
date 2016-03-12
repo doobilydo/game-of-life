@@ -1,4 +1,8 @@
+file:///home/lorax/github/game-of-life/web/Cell.dart
+file:///home/lorax/github/game-of-life/web/globals.dart
 file:///home/lorax/github/game-of-life/web/life.dart
+file:///home/lorax/github/game-of-life/web/patterns.dart
+file:///home/lorax/github/game-of-life/web/ui.dart
 file:///usr/lib/dart/lib/_internal/js_runtime/lib/annotations.dart
 file:///usr/lib/dart/lib/_internal/js_runtime/lib/async_patch.dart
 file:///usr/lib/dart/lib/_internal/js_runtime/lib/collection_patch.dart
@@ -124,7 +128,6 @@ file:///usr/lib/dart/lib/internal/sort.dart
 file:///usr/lib/dart/lib/internal/symbol.dart
 file:///usr/lib/dart/lib/isolate/capability.dart
 file:///usr/lib/dart/lib/isolate/isolate.dart
-file:///usr/lib/dart/lib/js/dart2js/js_dart2js.dart
 file:///usr/lib/dart/lib/math/jenkins_smi_hash.dart
 file:///usr/lib/dart/lib/math/math.dart
 file:///usr/lib/dart/lib/math/point.dart
