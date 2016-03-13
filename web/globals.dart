@@ -27,6 +27,7 @@ int cyclesSoFar = 0;
 final sleepDuration = const Duration(milliseconds: 50);
 
 var initPattern = pattern.patternD4a;
+TextAreaElement text = querySelector('#code');
 
 int livingCells = 0;
 int lastCycle = 0;

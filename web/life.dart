@@ -39,6 +39,42 @@ void main() {
   }
   querySelector('#increment').addEventListener('click', clickIncrement, false);
 
+// Designer
+  Element grid = querySelector('#grid');
+  var list = new List<String>();
+
+  for (int y = 0; y < life.rows; y++) {
+    for (int x = 0; x < life.columns; x++) {
+      CheckboxInputElement checkBox = new CheckboxInputElement();
+      checkBox.value = "$x,$y";
+
+      void click(Event event) {
+        String temp = "";
+        if (checkBox.checked) {
+          list.add(checkBox.value);
+        } else {
+          list.remove(checkBox.value);
+        }
+        list.sort();
+
+        for (String line in list) {
+          if (list.last == line) {
+            // leave out the comma
+            temp = temp + "$line";
+          } else {
+            temp = temp + "$line,\n";
+          }
+        }
+        life.text.setInnerHtml(getText(temp));
+      }
+
+      checkBox.addEventListener('click', click, false);
+      grid.append(checkBox);
+    }
+  }
+  double size = 18.7 * life.rows;
+  grid.style.width = "${size}px";
+
   return;
 }
 
@@ -167,4 +203,12 @@ void drawCells(Cell cell) {
 void display(cycle) {
   iterateMatrix(drawCells);
   ui.displayStats(cycle);
+}
+
+String getText(String input) {
+  return '''
+var coordMap = {
+${input}
+};
+  ''';
 }
