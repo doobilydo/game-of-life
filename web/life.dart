@@ -6,12 +6,15 @@ import 'ui.dart' as ui;
 import 'Cell.dart';
 import 'dart:html';
 import 'dart:async';
+// import 'packages/polymer_elements/paper_button.dart';
+// import 'packages/polymer/polymer.dart';
 
 /// Links to read:
 /// [https://www.dartlang.org/tools/dart2js/]
 /// [https://dart-atom.github.io/dartlang/]
 /// [https://www.dartlang.org/docs/tutorials/connect-dart-html/#about-css-selectors]
 /// [https://www.dartlang.org/docs/tutorials/using-polymer/]
+/// dart2js --out=life.dart.js life.dart
 void main() {
   print('Starting...');
 
@@ -22,14 +25,14 @@ void main() {
 
   /// Event handler for 'Start' button.
   void clickStart(Event event) {
-    life.cancel = true;
+    life.cancel = false;
     lifeCycle(life.lifeCycles);
   }
   querySelector('#start').addEventListener('click', clickStart, false);
 
   /// Event handler for 'Pause' button.
   void clickPause(Event event) {
-    life.cancel = false;
+    life.cancel = true;
   }
   querySelector('#pause').addEventListener('click', clickPause, false);
 
@@ -44,37 +47,51 @@ void main() {
   var list = new List<String>();
 
   for (int y = 0; y < life.rows; y++) {
+    //  var tr = grid.appendChild(document.createElement('tr'));
+    TableRowElement row = new TableRowElement();
+    grid.append(row);
+
     for (int x = 0; x < life.columns; x++) {
       CheckboxInputElement checkBox = new CheckboxInputElement();
+      TableCellElement cell = new TableCellElement();
+      cell.append(checkBox);
+      row.append(cell);
+
       checkBox.value = "$x,$y";
+      checkBox.title = checkBox.value;
+      checkBox.checked = life.matrix[y][x].state;
 
       void click(Event event) {
         String temp = "";
         if (checkBox.checked) {
           list.add(checkBox.value);
+          life.matrix[y][x].state = 1;
         } else {
           list.remove(checkBox.value);
+          life.matrix[y][x].state = 0;
         }
         list.sort();
 
         for (String line in list) {
           if (list.last == line) {
             // leave out the comma
-            temp = temp + "$line";
+            temp = temp + "'$line'";
           } else {
-            temp = temp + "$line,\n";
+            temp = temp + "'$line',\n";
           }
         }
         life.text.setInnerHtml(getText(temp));
+        display(life.cyclesSoFar);
+      }
+
+      change(Event event) {
+        checkBox.style.background = life.livingColor;
       }
 
       checkBox.addEventListener('click', click, false);
-      grid.append(checkBox);
+      checkBox.addEventListener('mouseover', change, false);
     }
   }
-  double size = 18.7 * life.rows;
-  grid.style.width = "${size}px";
-
   return;
 }
 
@@ -87,10 +104,10 @@ void init() {
       (life.canvasHeight / 2) - cellsHigh / 2);
 
   // Scale the canvas?
-  // var scaleSquare = 0.9;
-  // var scaleWidth = scaleSquare;
-  // var scaleHeight = scaleSquare;
-  // context.scale(scaleWidth, scaleHeight);
+  var scaleSquare = 1;
+  var scaleWidth = scaleSquare;
+  var scaleHeight = scaleSquare;
+  life.context.scale(scaleWidth, scaleHeight);
 
   // Create each cell
   initCells();
@@ -124,7 +141,7 @@ void lifeCycle(int cycles) {
     if (life.livingCells == 0) {
       life.cancel = true;
     }
-    if ((life.cancel) && (life.cyclesSoFar <= cycles)) {
+    if ((!life.cancel) && (life.cyclesSoFar <= cycles)) {
       new Future.delayed(life.sleepDuration, () {
         runCycle();
       });

@@ -1,3 +1,12 @@
 name: game_of_life
 description: An interactive web application based on Conway's Game of Life.
 author: thethneedinglorax@gmail.com
+dependencies:
+  # polymer_elements: "^0.16.4+1"
+  polymer: "^0.16.4+1"
+  # web_components: ^0.12.0
+  # reflectable: ^0.3.3
+  browser: any
+transformers:
+- polymer:
+    entry_points: web/index.html

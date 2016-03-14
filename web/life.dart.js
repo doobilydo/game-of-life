@@ -507,7 +507,7 @@
   var dart = [["", "Cell.dart",, K, {
     "^": "",
     Cell: {
-      "^": "Object;state>,nextState,neighbors,neighborsList<,coordX@,coordY<",
+      "^": "Object;state*,nextState,neighbors,neighborsList<,coordX@,coordY<",
       check$0: function() {
         this.checkNeighbors$0();
         this.nextState = this.tick$0();
@@ -594,7 +594,7 @@
       toString$0: ["super$Interceptor$toString", function(receiver) {
         return H.Primitives_objectToHumanReadableString(receiver);
       }],
-      "%": "Blob|CanvasGradient|CanvasPattern|DOMError|DOMImplementation|File|FileError|MediaError|MediaKeyError|NavigatorUserMediaError|PositionError|Range|SQLError|SVGAnimatedLength|SVGAnimatedNumberList|SVGAnimatedString|WebGLRenderingContext"
+      "%": "Blob|CanvasGradient|CanvasPattern|DOMError|DOMImplementation|File|FileError|MediaError|MediaKeyError|NavigatorUserMediaError|PositionError|Range|SQLError|SVGAnimatedLength|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString|WebGLRenderingContext"
     },
     JSBool: {
       "^": "Interceptor;",
@@ -651,6 +651,16 @@
         if (!!receiver.fixed$length)
           throw H.wrapException(new P.UnsupportedError(reason));
       },
+      remove$1: function(receiver, element) {
+        var i;
+        this.checkGrowable$1(receiver, "remove");
+        for (i = 0; i < receiver.length; ++i)
+          if (J.$eq$(receiver[i], element)) {
+            receiver.splice(i, 1);
+            return true;
+          }
+        return false;
+      },
       forEach$1: function(receiver, f) {
         var end, i;
         end = receiver.length;
@@ -671,6 +681,12 @@
       get$first: function(receiver) {
         if (receiver.length > 0)
           return receiver[0];
+        throw H.wrapException(H.IterableElementError_noElement());
+      },
+      get$last: function(receiver) {
+        var t1 = receiver.length;
+        if (t1 > 0)
+          return receiver[t1 - 1];
         throw H.wrapException(H.IterableElementError_noElement());
       },
       setRange$4: function(receiver, start, end, iterable, skipCount) {
@@ -793,6 +809,34 @@
     },
     JSNumber: {
       "^": "Interceptor;",
+      compareTo$1: function(receiver, b) {
+        var bIsNegative;
+        if (typeof b !== "number")
+          throw H.wrapException(H.argumentErrorValue(b));
+        if (receiver < b)
+          return -1;
+        else if (receiver > b)
+          return 1;
+        else if (receiver === b) {
+          if (receiver === 0) {
+            bIsNegative = this.get$isNegative(b);
+            if (this.get$isNegative(receiver) === bIsNegative)
+              return 0;
+            if (this.get$isNegative(receiver))
+              return -1;
+            return 1;
+          }
+          return 0;
+        } else if (isNaN(receiver)) {
+          if (isNaN(b))
+            return 0;
+          return 1;
+        } else
+          return -1;
+      },
+      get$isNegative: function(receiver) {
+        return receiver === 0 ? 1 / receiver < 0 : receiver < 0;
+      },
       remainder$1: function(receiver, b) {
         return receiver % b;
       },
@@ -845,6 +889,11 @@
         if (typeof other !== "number")
           throw H.wrapException(H.argumentErrorValue(other));
         return receiver < other;
+      },
+      $gt: function(receiver, other) {
+        if (typeof other !== "number")
+          throw H.wrapException(H.argumentErrorValue(other));
+        return receiver > other;
       },
       $isnum: 1
     },
@@ -902,6 +951,16 @@
       },
       toLowerCase$0: function(receiver) {
         return receiver.toLowerCase();
+      },
+      compareTo$1: function(receiver, other) {
+        var t1;
+        if (typeof other !== "string")
+          throw H.wrapException(H.argumentErrorValue(other));
+        if (receiver === other)
+          t1 = 0;
+        else
+          t1 = receiver < other ? -1 : 1;
+        return t1;
       },
       toString$0: function(receiver) {
         return receiver;
@@ -3509,6 +3568,217 @@
     IterableElementError_tooFew: function() {
       return new P.StateError("Too few elements");
     },
+    Sort__doSort: function(a, left, right, compare) {
+      if (right - left <= 32)
+        H.Sort__insertionSort(a, left, right, compare);
+      else
+        H.Sort__dualPivotQuicksort(a, left, right, compare);
+    },
+    Sort__insertionSort: function(a, left, right, compare) {
+      var i, t1, el, j, j0;
+      for (i = left + 1, t1 = J.getInterceptor$asx(a); i <= right; ++i) {
+        el = t1.$index(a, i);
+        j = i;
+        while (true) {
+          if (!(j > left && J.$gt$n(compare.call$2(t1.$index(a, j - 1), el), 0)))
+            break;
+          j0 = j - 1;
+          t1.$indexSet(a, j, t1.$index(a, j0));
+          j = j0;
+        }
+        t1.$indexSet(a, j, el);
+      }
+    },
+    Sort__dualPivotQuicksort: function(a, left, right, compare) {
+      var sixth, index1, index5, index3, index2, index4, t1, el1, el2, el3, el4, el5, t0, less, great, k, ak, comp, t2, great0, less0, pivots_are_equal;
+      sixth = C.JSInt_methods._tdivFast$1(right - left + 1, 6);
+      index1 = left + sixth;
+      index5 = right - sixth;
+      index3 = C.JSInt_methods._tdivFast$1(left + right, 2);
+      index2 = index3 - sixth;
+      index4 = index3 + sixth;
+      t1 = J.getInterceptor$asx(a);
+      el1 = t1.$index(a, index1);
+      el2 = t1.$index(a, index2);
+      el3 = t1.$index(a, index3);
+      el4 = t1.$index(a, index4);
+      el5 = t1.$index(a, index5);
+      if (J.$gt$n(compare.call$2(el1, el2), 0)) {
+        t0 = el2;
+        el2 = el1;
+        el1 = t0;
+      }
+      if (J.$gt$n(compare.call$2(el4, el5), 0)) {
+        t0 = el5;
+        el5 = el4;
+        el4 = t0;
+      }
+      if (J.$gt$n(compare.call$2(el1, el3), 0)) {
+        t0 = el3;
+        el3 = el1;
+        el1 = t0;
+      }
+      if (J.$gt$n(compare.call$2(el2, el3), 0)) {
+        t0 = el3;
+        el3 = el2;
+        el2 = t0;
+      }
+      if (J.$gt$n(compare.call$2(el1, el4), 0)) {
+        t0 = el4;
+        el4 = el1;
+        el1 = t0;
+      }
+      if (J.$gt$n(compare.call$2(el3, el4), 0)) {
+        t0 = el4;
+        el4 = el3;
+        el3 = t0;
+      }
+      if (J.$gt$n(compare.call$2(el2, el5), 0)) {
+        t0 = el5;
+        el5 = el2;
+        el2 = t0;
+      }
+      if (J.$gt$n(compare.call$2(el2, el3), 0)) {
+        t0 = el3;
+        el3 = el2;
+        el2 = t0;
+      }
+      if (J.$gt$n(compare.call$2(el4, el5), 0)) {
+        t0 = el5;
+        el5 = el4;
+        el4 = t0;
+      }
+      t1.$indexSet(a, index1, el1);
+      t1.$indexSet(a, index3, el3);
+      t1.$indexSet(a, index5, el5);
+      t1.$indexSet(a, index2, t1.$index(a, left));
+      t1.$indexSet(a, index4, t1.$index(a, right));
+      less = left + 1;
+      great = right - 1;
+      if (J.$eq$(compare.call$2(el2, el4), 0)) {
+        for (k = less; k <= great; ++k) {
+          ak = t1.$index(a, k);
+          comp = compare.call$2(ak, el2);
+          t2 = J.getInterceptor(comp);
+          if (t2.$eq(comp, 0))
+            continue;
+          if (t2.$lt(comp, 0)) {
+            if (k !== less) {
+              t1.$indexSet(a, k, t1.$index(a, less));
+              t1.$indexSet(a, less, ak);
+            }
+            ++less;
+          } else
+            for (; true;) {
+              comp = compare.call$2(t1.$index(a, great), el2);
+              t2 = J.getInterceptor$n(comp);
+              if (t2.$gt(comp, 0)) {
+                --great;
+                continue;
+              } else {
+                great0 = great - 1;
+                if (t2.$lt(comp, 0)) {
+                  t1.$indexSet(a, k, t1.$index(a, less));
+                  less0 = less + 1;
+                  t1.$indexSet(a, less, t1.$index(a, great));
+                  t1.$indexSet(a, great, ak);
+                  great = great0;
+                  less = less0;
+                  break;
+                } else {
+                  t1.$indexSet(a, k, t1.$index(a, great));
+                  t1.$indexSet(a, great, ak);
+                  great = great0;
+                  break;
+                }
+              }
+            }
+        }
+        pivots_are_equal = true;
+      } else {
+        for (k = less; k <= great; ++k) {
+          ak = t1.$index(a, k);
+          if (J.$lt$n(compare.call$2(ak, el2), 0)) {
+            if (k !== less) {
+              t1.$indexSet(a, k, t1.$index(a, less));
+              t1.$indexSet(a, less, ak);
+            }
+            ++less;
+          } else if (J.$gt$n(compare.call$2(ak, el4), 0))
+            for (; true;)
+              if (J.$gt$n(compare.call$2(t1.$index(a, great), el4), 0)) {
+                --great;
+                if (great < k)
+                  break;
+                continue;
+              } else {
+                great0 = great - 1;
+                if (J.$lt$n(compare.call$2(t1.$index(a, great), el2), 0)) {
+                  t1.$indexSet(a, k, t1.$index(a, less));
+                  less0 = less + 1;
+                  t1.$indexSet(a, less, t1.$index(a, great));
+                  t1.$indexSet(a, great, ak);
+                  less = less0;
+                } else {
+                  t1.$indexSet(a, k, t1.$index(a, great));
+                  t1.$indexSet(a, great, ak);
+                }
+                great = great0;
+                break;
+              }
+        }
+        pivots_are_equal = false;
+      }
+      t2 = less - 1;
+      t1.$indexSet(a, left, t1.$index(a, t2));
+      t1.$indexSet(a, t2, el2);
+      t2 = great + 1;
+      t1.$indexSet(a, right, t1.$index(a, t2));
+      t1.$indexSet(a, t2, el4);
+      H.Sort__doSort(a, left, less - 2, compare);
+      H.Sort__doSort(a, great + 2, right, compare);
+      if (pivots_are_equal)
+        return;
+      if (less < index1 && great > index5) {
+        for (; J.$eq$(compare.call$2(t1.$index(a, less), el2), 0);)
+          ++less;
+        for (; J.$eq$(compare.call$2(t1.$index(a, great), el4), 0);)
+          --great;
+        for (k = less; k <= great; ++k) {
+          ak = t1.$index(a, k);
+          if (J.$eq$(compare.call$2(ak, el2), 0)) {
+            if (k !== less) {
+              t1.$indexSet(a, k, t1.$index(a, less));
+              t1.$indexSet(a, less, ak);
+            }
+            ++less;
+          } else if (J.$eq$(compare.call$2(ak, el4), 0))
+            for (; true;)
+              if (J.$eq$(compare.call$2(t1.$index(a, great), el4), 0)) {
+                --great;
+                if (great < k)
+                  break;
+                continue;
+              } else {
+                great0 = great - 1;
+                if (J.$lt$n(compare.call$2(t1.$index(a, great), el2), 0)) {
+                  t1.$indexSet(a, k, t1.$index(a, less));
+                  less0 = less + 1;
+                  t1.$indexSet(a, less, t1.$index(a, great));
+                  t1.$indexSet(a, great, ak);
+                  less = less0;
+                } else {
+                  t1.$indexSet(a, k, t1.$index(a, great));
+                  t1.$indexSet(a, great, ak);
+                }
+                great = great0;
+                break;
+              }
+        }
+        H.Sort__doSort(a, less, great, compare);
+      } else
+        H.Sort__doSort(a, less, great, compare);
+    },
     ListIterable: {
       "^": "Iterable;",
       get$iterator: function(_) {
@@ -3547,23 +3817,23 @@
       $isEfficientLength: 1
     },
     ListIterator: {
-      "^": "Object;_iterable,__internal$_length,_index,__internal$_current",
+      "^": "Object;_iterable,_length,_index,_current",
       get$current: function() {
-        return this.__internal$_current;
+        return this._current;
       },
       moveNext$0: function() {
         var t1, t2, $length, t3;
         t1 = this._iterable;
         t2 = J.getInterceptor$asx(t1);
         $length = t2.get$length(t1);
-        if (this.__internal$_length !== $length)
+        if (this._length !== $length)
           throw H.wrapException(new P.ConcurrentModificationError(t1));
         t3 = this._index;
         if (t3 >= $length) {
-          this.__internal$_current = null;
+          this._current = null;
           return false;
         }
-        this.__internal$_current = t2.elementAt$1(t1, t3);
+        this._current = t2.elementAt$1(t1, t3);
         ++this._index;
         return true;
       }
@@ -3594,18 +3864,18 @@
       $isEfficientLength: 1
     },
     MappedIterator: {
-      "^": "Iterator;__internal$_current,_iterator,_f",
+      "^": "Iterator;_current,_iterator,_f",
       moveNext$0: function() {
         var t1 = this._iterator;
         if (t1.moveNext$0()) {
-          this.__internal$_current = this._f$1(t1.get$current());
+          this._current = this._f$1(t1.get$current());
           return true;
         }
-        this.__internal$_current = null;
+        this._current = null;
         return false;
       },
       get$current: function() {
-        return this.__internal$_current;
+        return this._current;
       },
       _f$1: function(arg0) {
         return this._f.call$1(arg0);
@@ -3704,7 +3974,7 @@
     },
     Future_Future$delayed: function(duration, computation, $T) {
       var result = H.setRuntimeTypeInfo(new P._Future(0, $.Zone__current, null), [$T]);
-      P.Timer_Timer(duration, new P.closure(computation, result));
+      P.Timer_Timer(duration, new P.closure0(computation, result));
       return result;
     },
     _completeWithErrorCallback: function(result, error, stackTrace) {
@@ -3880,7 +4150,7 @@
     Future: {
       "^": "Object;"
     },
-    closure: {
+    closure0: {
       "^": "Closure:0;computation,result",
       call$0: function() {
         var e, s, t1, exception;
@@ -5103,6 +5373,9 @@
     }
   }], ["dart.core", "dart:core",, P, {
     "^": "",
+    Comparable_compare: [function(a, b) {
+      return J.compareTo$1$ns(a, b);
+    }, "call$2", "core_Comparable_compare$closure", 4, 0, 15],
     Error_safeToString: function(object) {
       if (typeof object === "number" || typeof object === "boolean" || null == object)
         return J.toString$0$(object);
@@ -5134,14 +5407,20 @@
       "^": "Object;"
     },
     "+bool": 0,
+    Comparable: {
+      "^": "Object;"
+    },
     DateTime: {
-      "^": "Object;_value,isUtc",
+      "^": "Object;_value<,isUtc",
       $eq: function(_, other) {
         if (other == null)
           return false;
         if (!(other instanceof P.DateTime))
           return false;
         return this._value === other._value && true;
+      },
+      compareTo$1: function(_, other) {
+        return C.JSInt_methods.compareTo$1(this._value, other.get$_value());
       },
       get$hashCode: function(_) {
         var t1 = this._value;
@@ -5172,6 +5451,8 @@
         if (t1)
           throw H.wrapException(P.ArgumentError$(this.get$millisecondsSinceEpoch()));
       },
+      $isComparable: 1,
+      $asComparable: Isolate.functionThatReturnsNull,
       static: {
         DateTime__fourDigits: function(n) {
           var absN, sign;
@@ -5200,16 +5481,23 @@
       }
     },
     $double: {
-      "^": "num;"
+      "^": "num;",
+      $isComparable: 1,
+      $asComparable: function() {
+        return [P.num];
+      }
     },
     "+double": 0,
     Duration: {
-      "^": "Object;_duration",
+      "^": "Object;_duration<",
       $add: function(_, other) {
         return new P.Duration(C.JSInt_methods.$add(this._duration, other.get$_duration()));
       },
       $lt: function(_, other) {
         return C.JSInt_methods.$lt(this._duration, other.get$_duration());
+      },
+      $gt: function(_, other) {
+        return C.JSInt_methods.$gt(this._duration, other.get$_duration());
       },
       $eq: function(_, other) {
         if (other == null)
@@ -5221,6 +5509,9 @@
       get$hashCode: function(_) {
         return this._duration & 0x1FFFFFFF;
       },
+      compareTo$1: function(_, other) {
+        return C.JSInt_methods.compareTo$1(this._duration, other.get$_duration());
+      },
       toString$0: function(_) {
         var t1, t2, twoDigitMinutes, twoDigitSeconds, sixDigitUs;
         t1 = new P.Duration_toString_twoDigits();
@@ -5231,6 +5522,10 @@
         twoDigitSeconds = t1.call$1(C.JSInt_methods.remainder$1(C.JSInt_methods._tdivFast$1(t2, 1000000), 60));
         sixDigitUs = new P.Duration_toString_sixDigits().call$1(C.JSInt_methods.remainder$1(t2, 1000000));
         return "" + C.JSInt_methods._tdivFast$1(t2, 3600000000) + ":" + H.S(twoDigitMinutes) + ":" + H.S(twoDigitSeconds) + "." + H.S(sixDigitUs);
+      },
+      $isComparable: 1,
+      $asComparable: function() {
+        return [P.Duration];
       }
     },
     Duration_toString_sixDigits: {
@@ -5448,7 +5743,11 @@
       }
     },
     $int: {
-      "^": "num;"
+      "^": "num;",
+      $isComparable: 1,
+      $asComparable: function() {
+        return [P.num];
+      }
     },
     "+int": 0,
     Iterable: {
@@ -5520,7 +5819,11 @@
     },
     "+Null": 0,
     num: {
-      "^": "Object;"
+      "^": "Object;",
+      $isComparable: 1,
+      $asComparable: function() {
+        return [P.num];
+      }
     },
     "+num": 0,
     Object: {
@@ -5542,7 +5845,11 @@
       "^": "Object;"
     },
     String: {
-      "^": "Object;"
+      "^": "Object;",
+      $isComparable: 1,
+      $asComparable: function() {
+        return [P.String];
+      }
     },
     "+String": 0,
     StringBuffer: {
@@ -5580,7 +5887,7 @@
       fragment = (t1 && C.BodyElement_methods).createFragment$3$treeSanitizer$validator(t1, html, treeSanitizer, validator);
       fragment.toString;
       t1 = new W._ChildNodeListLazy(fragment);
-      t1 = t1.where$1(t1, new W.closure0());
+      t1 = t1.where$1(t1, new W.closure());
       return t1.get$single(t1);
     },
     Element__safeTagName: function(element) {
@@ -5595,6 +5902,18 @@
       }
       return result;
     },
+    InputElement_InputElement: function(type) {
+      var e, t1, exception;
+      t1 = document;
+      e = t1.createElement("input");
+      if (type != null)
+        try {
+          J.set$type$x(e, type);
+        } catch (exception) {
+          H.unwrapException(exception);
+        }
+      return e;
+    },
     querySelector: function(selectors) {
       return document.querySelector(selectors);
     },
@@ -5604,10 +5923,10 @@
       $isElement: 1,
       $isNode: 1,
       $isObject: 1,
-      "%": "HTMLAppletElement|HTMLBRElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDialogElement|HTMLDirectoryElement|HTMLDivElement|HTMLFontElement|HTMLFrameElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLLIElement|HTMLLabelElement|HTMLLegendElement|HTMLMarqueeElement|HTMLMenuElement|HTMLMenuItemElement|HTMLMeterElement|HTMLModElement|HTMLOListElement|HTMLOptGroupElement|HTMLOptionElement|HTMLParagraphElement|HTMLPictureElement|HTMLPreElement|HTMLProgressElement|HTMLQuoteElement|HTMLScriptElement|HTMLShadowElement|HTMLSourceElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableHeaderCellElement|HTMLTitleElement|HTMLTrackElement|HTMLUListElement|HTMLUnknownElement|PluginPlaceholderElement;HTMLElement"
+      "%": "HTMLAppletElement|HTMLBRElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDialogElement|HTMLDirectoryElement|HTMLDivElement|HTMLFontElement|HTMLFrameElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLLabelElement|HTMLLegendElement|HTMLMarqueeElement|HTMLModElement|HTMLOptGroupElement|HTMLParagraphElement|HTMLPictureElement|HTMLPreElement|HTMLQuoteElement|HTMLShadowElement|HTMLSpanElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableHeaderCellElement|HTMLTitleElement|HTMLTrackElement|HTMLUListElement|HTMLUnknownElement|PluginPlaceholderElement;HTMLElement"
     },
     AnchorElement: {
-      "^": "HtmlElement;hostname=,href},port=,protocol=",
+      "^": "HtmlElement;type},hostname=,href},port=,protocol=",
       toString$0: function(receiver) {
         return String(receiver);
       },
@@ -5633,7 +5952,7 @@
       "%": "HTMLBodyElement"
     },
     ButtonElement: {
-      "^": "HtmlElement;name=",
+      "^": "HtmlElement;name=,type},value%",
       "%": "HTMLButtonElement"
     },
     CanvasElement: {
@@ -5653,6 +5972,9 @@
       },
       fillRect$4: function(receiver, x, y, width, height) {
         return receiver.fillRect(x, y, width, height);
+      },
+      scale$2: function(receiver, x, y) {
+        return receiver.scale(x, y);
       },
       translate$2: function(receiver, x, y) {
         return receiver.translate(x, y);
@@ -5767,14 +6089,14 @@
       $isInterceptor: 1,
       "%": ";Element"
     },
-    closure0: {
+    closure: {
       "^": "Closure:1;",
       call$1: function(e) {
         return !!J.getInterceptor(e).$isElement;
       }
     },
     EmbedElement: {
-      "^": "HtmlElement;height=,name=,width=",
+      "^": "HtmlElement;height=,name=,type},width=",
       "%": "HTMLEmbedElement"
     },
     ErrorEvent: {
@@ -5811,7 +6133,7 @@
       "%": "HTMLImageElement"
     },
     InputElement: {
-      "^": "HtmlElement;height=,name=,width=",
+      "^": "HtmlElement;checked%,height=,name=,type},value%,width=",
       $isElement: 1,
       $isInterceptor: 1,
       "%": "HTMLInputElement"
@@ -5820,8 +6142,12 @@
       "^": "HtmlElement;name=",
       "%": "HTMLKeygenElement"
     },
+    LIElement: {
+      "^": "HtmlElement;value%",
+      "%": "HTMLLIElement"
+    },
     LinkElement: {
-      "^": "HtmlElement;href}",
+      "^": "HtmlElement;href},type}",
       "%": "HTMLLinkElement"
     },
     Location: {
@@ -5839,9 +6165,21 @@
       "^": "HtmlElement;error=",
       "%": "HTMLAudioElement;HTMLMediaElement"
     },
+    MenuElement: {
+      "^": "HtmlElement;type}",
+      "%": "HTMLMenuElement"
+    },
+    MenuItemElement: {
+      "^": "HtmlElement;checked%,type}",
+      "%": "HTMLMenuItemElement"
+    },
     MetaElement: {
       "^": "HtmlElement;name=",
       "%": "HTMLMetaElement"
+    },
+    MeterElement: {
+      "^": "HtmlElement;value%",
+      "%": "HTMLMeterElement"
     },
     MidiOutput: {
       "^": "MidiPort;",
@@ -5971,16 +6309,24 @@
       },
       $isEfficientLength: 1
     },
+    OListElement: {
+      "^": "HtmlElement;type}",
+      "%": "HTMLOListElement"
+    },
     ObjectElement: {
-      "^": "HtmlElement;height=,name=,width=",
+      "^": "HtmlElement;height=,name=,type},width=",
       "%": "HTMLObjectElement"
     },
+    OptionElement: {
+      "^": "HtmlElement;value%",
+      "%": "HTMLOptionElement"
+    },
     OutputElement: {
-      "^": "HtmlElement;name=",
+      "^": "HtmlElement;name=,value%",
       "%": "HTMLOutputElement"
     },
     ParamElement: {
-      "^": "HtmlElement;name=",
+      "^": "HtmlElement;name=,value%",
       "%": "HTMLParamElement"
     },
     PopStateEvent: {
@@ -5994,13 +6340,29 @@
       },
       "%": "PopStateEvent"
     },
+    ProgressElement: {
+      "^": "HtmlElement;value%",
+      "%": "HTMLProgressElement"
+    },
+    ScriptElement0: {
+      "^": "HtmlElement;type}",
+      "%": "HTMLScriptElement"
+    },
     SelectElement: {
-      "^": "HtmlElement;length=,name=",
+      "^": "HtmlElement;length=,name=,value%",
       "%": "HTMLSelectElement"
+    },
+    SourceElement: {
+      "^": "HtmlElement;type}",
+      "%": "HTMLSourceElement"
     },
     SpeechRecognitionError: {
       "^": "Event;error=",
       "%": "SpeechRecognitionError"
+    },
+    StyleElement: {
+      "^": "HtmlElement;type}",
+      "%": "HTMLStyleElement"
     },
     TableElement: {
       "^": "HtmlElement;",
@@ -6072,7 +6434,7 @@
       "%": "HTMLTemplateElement"
     },
     TextAreaElement: {
-      "^": "HtmlElement;name=",
+      "^": "HtmlElement;name=,value%",
       "%": "HTMLTextAreaElement"
     },
     VideoElement: {
@@ -6379,22 +6741,22 @@
       }
     },
     FixedSizeListIterator: {
-      "^": "Object;_array,_length,_position,_current",
+      "^": "Object;_array,_html$_length,_position,_html$_current",
       moveNext$0: function() {
         var nextPosition, t1;
         nextPosition = this._position + 1;
-        t1 = this._length;
+        t1 = this._html$_length;
         if (nextPosition < t1) {
-          this._current = J.$index$asx(this._array, nextPosition);
+          this._html$_current = J.$index$asx(this._array, nextPosition);
           this._position = nextPosition;
           return true;
         }
-        this._current = null;
+        this._html$_current = null;
         this._position = t1;
         return false;
       },
       get$current: function() {
-        return this._current;
+        return this._html$_current;
       }
     },
     NodeValidator: {
@@ -6678,10 +7040,14 @@
       "%": "SVGRectElement"
     },
     ScriptElement: {
-      "^": "SvgElement;",
+      "^": "SvgElement;type}",
       $isScriptElement: 1,
       $isInterceptor: 1,
       "%": "SVGScriptElement"
+    },
+    StyleElement0: {
+      "^": "SvgElement;type}",
+      "%": "SVGStyleElement"
     },
     SvgElement: {
       "^": "Element;",
@@ -6706,7 +7072,7 @@
       },
       $isSvgElement: 1,
       $isInterceptor: 1,
-      "%": "SVGAltGlyphDefElement|SVGAltGlyphItemElement|SVGComponentTransferFunctionElement|SVGDescElement|SVGDiscardElement|SVGFEDistantLightElement|SVGFEFuncAElement|SVGFEFuncBElement|SVGFEFuncGElement|SVGFEFuncRElement|SVGFEMergeNodeElement|SVGFEPointLightElement|SVGFESpotLightElement|SVGFontElement|SVGFontFaceElement|SVGFontFaceFormatElement|SVGFontFaceNameElement|SVGFontFaceSrcElement|SVGFontFaceUriElement|SVGGlyphElement|SVGHKernElement|SVGMetadataElement|SVGMissingGlyphElement|SVGStopElement|SVGStyleElement|SVGTitleElement|SVGVKernElement;SVGElement"
+      "%": "SVGAltGlyphDefElement|SVGAltGlyphItemElement|SVGComponentTransferFunctionElement|SVGDescElement|SVGDiscardElement|SVGFEDistantLightElement|SVGFEFuncAElement|SVGFEFuncBElement|SVGFEFuncGElement|SVGFEFuncRElement|SVGFEMergeNodeElement|SVGFEPointLightElement|SVGFESpotLightElement|SVGFontElement|SVGFontFaceElement|SVGFontFaceFormatElement|SVGFontFaceNameElement|SVGFontFaceSrcElement|SVGFontFaceUriElement|SVGGlyphElement|SVGHKernElement|SVGMetadataElement|SVGMissingGlyphElement|SVGStopElement|SVGTitleElement|SVGVKernElement;SVGElement"
     },
     SvgSvgElement: {
       "^": "GraphicsElement;height=,width=",
@@ -6989,7 +7355,7 @@
   }], ["gameoflife", "life.dart",, R, {
     "^": "",
     main: [function() {
-      var t1, t2, t3, t4, t5, t6, t7, t8;
+      var t1, t2, t3, t4, t5, t6, t7, t8, grid, list, y, row, x, checkBox, cell;
       P.print("Starting...");
       t1 = document.querySelector("#canvas").style;
       t2 = C.JSInt_methods.toString$0(C.JSNumber_methods.round$0(document.querySelector("#main").offsetWidth));
@@ -7018,6 +7384,7 @@
       if (typeof t8 !== "number")
         return t8.$div();
       J.translate$2$x(t6, t7 / 2 - (t1 + t2) * t3 / 2, t8 / 2 - (t4 + t2) * t5 / 2);
+      J.scale$2$x($.$get$context(), 1, 1);
       R.initCells();
       R.iterateMatrix(R.gameoflife__drawCells$closure());
       K.displayStats(0);
@@ -7027,6 +7394,46 @@
       J._addEventListener$3$x(t1, "click", new R.main_clickPause(), false);
       t1 = document.querySelector("#increment");
       J._addEventListener$3$x(t1, "click", new R.main_clickIncrement(), false);
+      grid = document.querySelector("#grid");
+      list = H.setRuntimeTypeInfo([], [P.String]);
+      y = 0;
+      while (true) {
+        t1 = $.$get$rows();
+        if (typeof t1 !== "number")
+          return H.iae(t1);
+        if (!(y < t1))
+          break;
+        t1 = document;
+        row = t1.createElement("tr");
+        grid.appendChild(row);
+        x = 0;
+        while (true) {
+          t1 = $.$get$columns();
+          if (typeof t1 !== "number")
+            return H.iae(t1);
+          if (!(x < t1))
+            break;
+          checkBox = W.InputElement_InputElement("checkbox");
+          t1 = document;
+          cell = t1.createElement("td");
+          cell.appendChild(checkBox);
+          row.appendChild(cell);
+          t1 = J.getInterceptor$x(checkBox);
+          t1.set$value(checkBox, "" + x + "," + y);
+          checkBox.title = t1.get$value(checkBox);
+          t2 = $.$get$matrix();
+          if (y >= t2.length)
+            return H.ioore(t2, y);
+          t2 = t2[y];
+          if (x >= t2.length)
+            return H.ioore(t2, x);
+          t1.set$checked(checkBox, J.get$state$x(t2[x]));
+          t1._addEventListener$3(checkBox, "click", new R.main_click(list, y, x, checkBox), false);
+          t1._addEventListener$3(checkBox, "mouseover", new R.main_change(checkBox), false);
+          ++x;
+        }
+        ++y;
+      }
       return;
     }, "call$0", "gameoflife__main$closure", 0, 0, 2],
     lifeCycle: function(cycles) {
@@ -7121,20 +7528,71 @@
     main_clickStart: {
       "^": "Closure:4;",
       call$1: function($event) {
-        $.cancel = true;
+        $.cancel = false;
         R.lifeCycle($.lifeCycles);
       }
     },
     main_clickPause: {
       "^": "Closure:4;",
       call$1: function($event) {
-        $.cancel = false;
+        $.cancel = true;
       }
     },
     main_clickIncrement: {
       "^": "Closure:4;",
       call$1: function($event) {
         R.lifeCycle(1);
+      }
+    },
+    main_click: {
+      "^": "Closure:4;list,y,x,checkBox",
+      call$1: function($event) {
+        var t1, t2, t3, t4, t5, temp, _i, line;
+        t1 = this.checkBox;
+        t2 = J.getInterceptor$x(t1);
+        t3 = this.list;
+        t4 = this.y;
+        t5 = this.x;
+        if (t2.get$checked(t1) === true) {
+          t3.push(t2.get$value(t1));
+          t1 = $.$get$matrix();
+          if (t4 >= t1.length)
+            return H.ioore(t1, t4);
+          t4 = t1[t4];
+          if (t5 >= t4.length)
+            return H.ioore(t4, t5);
+          J.set$state$x(t4[t5], 1);
+        } else {
+          C.JSArray_methods.remove$1(t3, t2.get$value(t1));
+          t1 = $.$get$matrix();
+          if (t4 >= t1.length)
+            return H.ioore(t1, t4);
+          t4 = t1[t4];
+          if (t5 >= t4.length)
+            return H.ioore(t4, t5);
+          J.set$state$x(t4[t5], 0);
+        }
+        C.JSArray_methods.checkMutable$1(t3, "sort");
+        t1 = P.core_Comparable_compare$closure();
+        H.Sort__doSort(t3, 0, t3.length - 1, t1);
+        for (t1 = t3.length, temp = "", _i = 0; _i < t3.length; t3.length === t1 || (0, H.throwConcurrentModificationError)(t3), ++_i) {
+          line = t3[_i];
+          t2 = C.JSArray_methods.get$last(t3);
+          temp = (t2 == null ? line == null : t2 === line) ? temp + ("'" + H.S(line) + "'") : temp + ("'" + H.S(line) + "',\n");
+        }
+        J.setInnerHtml$1$x($.$get$text(), "var coordMap = {\n" + temp + "\n};\n  ");
+        t1 = $.cyclesSoFar;
+        R.iterateMatrix(R.gameoflife__drawCells$closure());
+        K.displayStats(t1);
+      }
+    },
+    main_change: {
+      "^": "Closure:14;checkBox",
+      call$1: function($event) {
+        var t1, t2;
+        t1 = this.checkBox.style;
+        t2 = $.livingColor;
+        t1.background = t2;
       }
     },
     lifeCycle_refresh: {
@@ -7169,7 +7627,7 @@
         $.cyclesSoFar = t1;
         if ($.livingCells === 0)
           $.cancel = true;
-        if ($.cancel && t1 <= this.cycles)
+        if (!$.cancel && t1 <= this.cycles)
           P.Future_Future$delayed(C.Duration_50000, new R.lifeCycle_runCycle_closure(this), null);
       }
     },
@@ -7437,6 +7895,12 @@
   J.set$href$x = function(receiver, value) {
     return J.getInterceptor$x(receiver).set$href(receiver, value);
   };
+  J.set$state$x = function(receiver, value) {
+    return J.getInterceptor$x(receiver).set$state(receiver, value);
+  };
+  J.set$type$x = function(receiver, value) {
+    return J.getInterceptor$x(receiver).set$type(receiver, value);
+  };
   J.get$attributes$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$attributes(receiver);
   };
@@ -7472,6 +7936,11 @@
       return receiver + a0;
     return J.getInterceptor$ns(receiver).$add(receiver, a0);
   };
+  J.$gt$n = function(receiver, a0) {
+    if (typeof receiver == "number" && typeof a0 == "number")
+      return receiver > a0;
+    return J.getInterceptor$n(receiver).$gt(receiver, a0);
+  };
   J.$index$asx = function(receiver, a0) {
     if (typeof a0 === "number")
       if (receiver.constructor == Array || typeof receiver == "string" || H.isJsIndexable(receiver, receiver[init.dispatchPropertyName]))
@@ -7496,6 +7965,9 @@
   J.clearRect$4$x = function(receiver, a0, a1, a2, a3) {
     return J.getInterceptor$x(receiver).clearRect$4(receiver, a0, a1, a2, a3);
   };
+  J.compareTo$1$ns = function(receiver, a0) {
+    return J.getInterceptor$ns(receiver).compareTo$1(receiver, a0);
+  };
   J.createFragment$3$treeSanitizer$validator$x = function(receiver, a0, a1, a2) {
     return J.getInterceptor$x(receiver).createFragment$3$treeSanitizer$validator(receiver, a0, a1, a2);
   };
@@ -7516,6 +7988,9 @@
   };
   J.remove$0$ax = function(receiver) {
     return J.getInterceptor$ax(receiver).remove$0(receiver);
+  };
+  J.scale$2$x = function(receiver, a0, a1) {
+    return J.getInterceptor$x(receiver).scale$2(receiver, a0, a1);
   };
   J.send$1$x = function(receiver, a0) {
     return J.getInterceptor$x(receiver).send$1(receiver, a0);
@@ -7722,7 +8197,7 @@
   $.Element__parseRange = null;
   $.Element__defaultValidator = null;
   $.Element__defaultSanitizer = null;
-  $.drawSquare = 10;
+  $.drawSquare = 5;
   $.border = 1;
   $.livingColor = "orange";
   $.deadColor = "black";
@@ -7847,7 +8322,9 @@
     return $.cellSquare;
   }, "rows", "columns", "$get$columns", function() {
     return $.cellSquare;
-  }, "columns", "matrix", "$get$matrix", function() {
+  }, "columns", "text", "$get$text", function() {
+    return W.querySelector("#code");
+  }, "text", "matrix", "$get$matrix", function() {
     return H.setRuntimeTypeInfo([], [K.Cell]);
   }, "matrix", "coordA", "$get$coordA", function() {
     return P.LinkedHashMap__makeLiteral([0, 1, 0.25, 1, 0.5, 0, 0.75, -1, 1, -1, 1.25, -1, 1.5, 0, 1.75, 1]);
@@ -7857,7 +8334,7 @@
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
   init.metadata = [null];
-  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, v: true, args: [K.Cell]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, args: [,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [W.Node, W.Node]}];
+  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, v: true, args: [K.Cell]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, args: [,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, args: [W.Event]}, {func: 1, ret: P.$int, args: [P.Comparable, P.Comparable]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }

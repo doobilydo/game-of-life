@@ -9,7 +9,7 @@ var context = ui.getCanvas().getContext('2d');
 // canvas properties
 var canvasWidth = ui.getCanvas().width;
 var canvasHeight = ui.getCanvas().height;
-int drawSquare = 10;
+int drawSquare = 5;
 int drawWidth = drawSquare;
 int drawHeight = drawSquare;
 int border = 1;
