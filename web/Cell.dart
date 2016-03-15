@@ -39,9 +39,6 @@ class Cell {
         this.neighbors = this.neighbors + 1;
       }
     }
-    // if (this.neighbors > 0) {
-    //   print('${this.getName()}: ${this.neighbors}');
-    // }
   }
 
   /// Get the new status of the cell (alive or dead).

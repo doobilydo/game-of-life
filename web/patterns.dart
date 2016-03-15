@@ -1,4 +1,26 @@
 import 'Cell.dart';
+import 'dart:math';
+
+void patternRandom(Cell cell) {
+  bool coin = new Random().nextBool();
+  if (coin) {
+    cell.state = 1;
+  } else {
+    cell.state = 0;
+  }
+}
+
+void patternBlank(Cell cell) {
+  var dict = {};
+
+  String coord = '${cell.coordX},${cell.coordY}';
+
+  if (dict[coord] == 1) {
+    cell.state = 1;
+  } else {
+    cell.state = 0;
+  }
+}
 
 /**
  * Named for:

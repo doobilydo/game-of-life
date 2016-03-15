@@ -3,39 +3,36 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel='stylesheet' href='life.css'>
-<!-- <script src='life.js'></script>
-<script src='cell.js'></script>
-<script src='ui.js'></script> -->
 </head>
 
 <body>
-
     <div id='main' class='center'>
-        <input type='button' id='start' value='start'>
-        <input type='button' id='increment' value='Increment'>
+        <input type='button' id='start' value='Start'>
         <input type='button' id='pause' value='Pause'>
-        <div id='variables' class='variables'>
+        <input type='button' id='increment' value='Increment'>
+        <br>
+        <input type='button' id='reset' value='Reset (Random)'>
+        <!-- <div id='variables' class='variables'>
             <input id='drawSquare' type="range" min="0" max="50" value="5">
             <br>
             <input id='cellSquare' type="range" min="1" max="1000" value="50">
             <br>
             <input id='lifeCycles' type="range" min="0" max="1000000" value="5">
             <br>
-        </div>
+        </div> -->
 
         <div id='stats' class='stats'></div>
 
     </div>
     <div>
         <textarea id='code' class='code'></textarea>
-        <canvas class='canvas border' id='canvas' height='300' width='300'></canvas>
+        <canvas class='canvas' id='canvas' width='800' height='800'></canvas>
     </div>
-    <div id='designer' class='designer border'>
+    <!-- <div id='designer' class='designer border'> -->
         <table id='grid' class='grid'></table>
-    </div>
+    <!-- </div> -->
     <script type='application/dart' src='life.dart'></script>
     <script src="packages/browser/dart.js"></script>
-    <!-- <script src="life.dart.js"></script> -->
 </body>
 
 </html>

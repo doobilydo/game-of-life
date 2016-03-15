@@ -9,8 +9,9 @@ void displayStats(cycle) {
       Cycles: ${life.lifeCycles},
       Length of cycle: ${life.getDurationInSeconds()} second(s)<br>
       Cycle: ${life.cyclesSoFar}<br>
-      Last cycle: ${life.lastCycle}, Living cells: ${life.livingCells}<br>
+      Last cycle: ${life.lastCycle}<br>
       ''';
+      // , Living cells: ${life.livingCells}
 
   life.stats.setInnerHtml(stats);
 }

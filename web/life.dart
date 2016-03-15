@@ -6,20 +6,18 @@ import 'ui.dart' as ui;
 import 'Cell.dart';
 import 'dart:html';
 import 'dart:async';
-// import 'packages/polymer_elements/paper_button.dart';
-// import 'packages/polymer/polymer.dart';
 
 /// Links to read:
 /// [https://www.dartlang.org/tools/dart2js/]
 /// [https://dart-atom.github.io/dartlang/]
 /// [https://www.dartlang.org/docs/tutorials/connect-dart-html/#about-css-selectors]
 /// [https://www.dartlang.org/docs/tutorials/using-polymer/]
-/// dart2js --out=life.dart.js life.dart
+/// /usr/lib/dart/bin/dart2js --out=life.dart.js life.dart
 void main() {
-  print('Starting...');
+  print("Init() started....");
 
-  ui.getCanvas().style.width = querySelector('#main').offsetWidth.toString();
-  ui.getCanvas().style.height = querySelector('#main').offsetHeight.toString();
+  // ui.getCanvas().style.width = querySelector('#main').offsetWidth.toString();
+  // ui.getCanvas().style.height = querySelector('#main').offsetHeight.toString();
 
   init();
 
@@ -40,63 +38,34 @@ void main() {
   void clickIncrement(Event event) {
     lifeCycle(1);
   }
+
   querySelector('#increment').addEventListener('click', clickIncrement, false);
 
-// Designer
-  Element grid = querySelector('#grid');
-  var list = new List<String>();
-
-  for (int y = 0; y < life.rows; y++) {
-    //  var tr = grid.appendChild(document.createElement('tr'));
-    TableRowElement row = new TableRowElement();
-    grid.append(row);
-
-    for (int x = 0; x < life.columns; x++) {
-      CheckboxInputElement checkBox = new CheckboxInputElement();
-      TableCellElement cell = new TableCellElement();
-      cell.append(checkBox);
-      row.append(cell);
-
-      checkBox.value = "$x,$y";
-      checkBox.title = checkBox.value;
-      checkBox.checked = life.matrix[y][x].state;
-
-      void click(Event event) {
-        String temp = "";
-        if (checkBox.checked) {
-          list.add(checkBox.value);
-          life.matrix[y][x].state = 1;
-        } else {
-          list.remove(checkBox.value);
-          life.matrix[y][x].state = 0;
-        }
-        list.sort();
-
-        for (String line in list) {
-          if (list.last == line) {
-            // leave out the comma
-            temp = temp + "'$line'";
-          } else {
-            temp = temp + "'$line',\n";
-          }
-        }
-        life.text.setInnerHtml(getText(temp));
-        display(life.cyclesSoFar);
-      }
-
-      change(Event event) {
-        checkBox.style.background = life.livingColor;
-      }
-
-      checkBox.addEventListener('click', click, false);
-      checkBox.addEventListener('mouseover', change, false);
-    }
+  /// Event handler for 'Pause' button.
+  void clickReset(Event event) {
+    print('Reset clicked.');
+    clickPause(event);
+    ui.clear();
+    life.cyclesSoFar = 0;
+    life.livingCells = 0;
+    // Use a user defined pattern
+    iterateMatrix(life.initPattern);
+    display(0);
   }
+  querySelector('#reset').addEventListener('click', clickReset, false);
+
+  // loadDesigner();
+
+  print("Init() complete.");
   return;
 }
 
 /// Run the program
 void init() {
+
+  // ui.getCanvas().style.width='600px';
+  // ui.getCanvas().style.height='600px';
+
   // Center canvas
   var cellsWide = (((life.drawWidth + life.border) * life.columns));
   var cellsHigh = (((life.drawHeight + life.border) * life.rows));
@@ -170,6 +139,21 @@ void initCells() {
 
       // Use a user defined pattern
       life.initPattern(cell);
+
+      // Always initialize the corners as living.
+      // So we can see them...
+      if (x == 0 && y == 0) {
+        cell.state = 1;
+      }
+      if (x == life.columns - 1 && y == 0) {
+        cell.state = 1;
+      }
+      if (x == 0 && y == life.rows - 1) {
+        cell.state = 1;
+      }
+      if (x == life.columns - 1 && y == life.rows - 1) {
+        cell.state = 1;
+      }
     }
   }
   // After each cell is created, go around again and meet the neighbors.
@@ -228,4 +212,63 @@ var coordMap = {
 ${input}
 };
   ''';
+}
+
+/// Designer
+void loadDesigner() {
+  Element grid = querySelector('#grid');
+  var list = new List<String>();
+
+  print('loading designer...');
+  for (int y = 0; y < life.rows; y++) {
+    TableRowElement row = new TableRowElement();
+    grid.append(row);
+
+    for (int x = 0; x < life.columns; x++) {
+      DivElement checkBox = new DivElement();
+      TableCellElement cell = new TableCellElement();
+      cell.append(checkBox);
+      row.append(cell);
+
+      checkBox.setInnerHtml("$x,$y");
+      checkBox.title = checkBox.innerHtml;
+      checkBox.setAttribute('checked', life.matrix[y][x].state.toString());
+      checkBox.classes.add('designerBox');
+
+      if (checkBox.getAttribute('checked') == "1") {
+        checkBox.style.background = life.livingColor;
+      } else {
+        checkBox.style.background = life.deadColor;
+      }
+
+      void clickDesigner(Event event) {
+        String temp = "";
+        if (checkBox.getAttribute('checked') == "1") {
+          list.remove(checkBox.innerHtml);
+          life.matrix[y][x].state = 0;
+          checkBox.style.background = life.deadColor;
+          checkBox.setAttribute('checked', life.matrix[y][x].state.toString());
+        } else {
+          list.add(checkBox.innerHtml);
+          life.matrix[y][x].state = 1;
+          checkBox.style.background = life.livingColor;
+          checkBox.setAttribute('checked', life.matrix[y][x].state.toString());
+        }
+        list.sort();
+
+        for (String line in list) {
+          if (list.last == line) {
+            // leave out the comma
+            temp = temp + "'$line'";
+          } else {
+            temp = temp + "'$line',\n";
+          }
+        }
+        life.text.setInnerHtml(getText(temp));
+        display(life.cyclesSoFar);
+      }
+      checkBox.addEventListener('click', clickDesigner, false);
+    }
+  }
+  print('Done loading designer...');
 }

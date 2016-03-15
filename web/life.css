@@ -29,7 +29,7 @@ html, body {
 }
 
 .canvas {
-    /*height: 35%;*/
+    
 }
 
 .designer {
@@ -42,18 +42,29 @@ html, body {
     float: left;
     height: 300px;
     width: 200px;
+    display: none;
 }
 
 .grid {
-    margin:1em auto;
+    margin: 1em auto;
     border-collapse:collapse;
     overflow: scroll;
-    border: dotted green;
 }
 
 .grid td {
     text-align:center;
     font-size:0px;
+}
+
+.designerBox {
+    margin: 0;
+    width: 5px;
+    height: 5px;
+    border: 1px dotted green;
+}
+
+.designerBox:hover {
+    background-color: red;
 }
 
 input[type='button'] {
@@ -81,10 +92,4 @@ input[type='button']:hover {
     background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
     background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
     text-decoration: none;
-}
-
-input[type='checkbox'] {
-    margin: 0;
-    /*width: 5px;
-    height: 5px;*/
 }
