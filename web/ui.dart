@@ -11,7 +11,7 @@ void displayStats(cycle) {
       Cycle: ${life.cyclesSoFar}<br>
       Last cycle: ${life.lastCycle}<br>
       ''';
-      // , Living cells: ${life.livingCells}
+  // , Living cells: ${life.livingCells}
 
   life.stats.setInnerHtml(stats);
 }
@@ -25,13 +25,11 @@ void drawCell(int x, y, bool living) {
 
 /// Get the canvas element
 CanvasElement getCanvas() {
-  // console.log('function', 'getCanvas');
   return querySelector('#canvas');
 }
 
 /// Clear the canvas
 void clear() {
-  // console.log('function', 'clear');
   life.context.clearRect(0, 0, life.canvasWidth, life.canvasHeight);
 }
 

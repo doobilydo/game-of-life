@@ -19,10 +19,10 @@ String deadColor = 'black';
 Element stats = querySelector('#stats');
 
 // Data variables
-int cellSquare = 200;
+int cellSquare = 130;
 int rows = cellSquare; // Y
 int columns = cellSquare; // X
-int lifeCycles = 1000;
+int lifeCycles = 10000;
 int cyclesSoFar = 0;
 final sleepDuration = const Duration(milliseconds: 10);
 

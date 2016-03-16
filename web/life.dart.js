@@ -533,8 +533,6 @@
             return 0;
         } else if (this.neighbors === 3)
           return 1;
-        else
-          return 0;
         return 0;
       }
     }
@@ -7766,7 +7764,7 @@
   $.border = 1;
   $.livingColor = "orange";
   $.deadColor = "black";
-  $.cellSquare = 200;
+  $.cellSquare = 130;
   $.lifeCycles = 1000;
   $.cyclesSoFar = 0;
   $.initPattern = O.patterns__patternRandom$closure();

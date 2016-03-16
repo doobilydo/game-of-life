@@ -90,14 +90,15 @@ void lifeCycle(int cycles) {
     /// Check for living neighbors
     void check(Cell cell) {
       cell.check();
+      cell.grow();
     }
 
     /// Advance to the next state.
-    void grow(Cell cell) {
-      cell.grow();
-    }
+    // void grow(Cell cell) {
+    //
+    // }
     iterateMatrix(check);
-    iterateMatrix(grow);
+    // iterateMatrix(grow);
     ui.clear(); // Clear screen
     life.livingCells = 0;
   }
@@ -139,21 +140,6 @@ void initCells() {
 
       // Use a user defined pattern
       life.initPattern(cell);
-
-      // Always initialize the corners as living.
-      // So we can see them...
-      if (x == 0 && y == 0) {
-        cell.state = 1;
-      }
-      if (x == life.columns - 1 && y == 0) {
-        cell.state = 1;
-      }
-      if (x == 0 && y == life.rows - 1) {
-        cell.state = 1;
-      }
-      if (x == life.columns - 1 && y == life.rows - 1) {
-        cell.state = 1;
-      }
     }
   }
   // After each cell is created, go around again and meet the neighbors.
@@ -164,7 +150,7 @@ void initCells() {
 void meetTheNeighbors(Cell cell) {
   double theta = 0.0;
 
-  while (theta < 1.75) {
+  while (theta <= 1.75) {
     int X = cell.coordX + life.coordA[theta];
     int Y = cell.coordY + life.coordB[theta];
 

@@ -27,6 +27,7 @@ class Cell {
   void connect(Cell N) {
     if (this.neighborsList.indexOf(N) == -1) {
       this.neighborsList.add(N);
+      N.connect(this);
     }
   }
 
@@ -39,6 +40,12 @@ class Cell {
         this.neighbors = this.neighbors + 1;
       }
     }
+    // if (state == 1) {
+    //   print("Cell: ${this.getName()}, State: ${this.state}, ${this.neighborsList.length}(${this.neighbors})");
+    //   for(Cell n in this.neighborsList){
+    //     print("${n.getName()}: ${n.state}");
+    //   }
+    // }
   }
 
   /// Get the new status of the cell (alive or dead).
@@ -46,19 +53,17 @@ class Cell {
   int tick() {
     if (this.state == 1) {
       if (this.neighbors < 2) {
-        return 0;
+        return 0; // dead
       }
       if (this.neighbors == 2 || this.neighbors == 3) {
-        return 1;
+        return 1; // alive
       }
       if (this.neighbors > 3) {
-        return 0;
+        return 0; // dead
       }
     } else {
       if (this.neighbors == 3) {
-        return 1;
-      } else {
-        return 0;
+        return 1; // reborn
       }
     }
     return 0;
