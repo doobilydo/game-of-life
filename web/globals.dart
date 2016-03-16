@@ -19,15 +19,15 @@ String deadColor = 'black';
 Element stats = querySelector('#stats');
 
 // Data variables
-int cellSquare = 130;
+int cellSquare = 500;
 int rows = cellSquare; // Y
 int columns = cellSquare; // X
 int lifeCycles = 10000;
 int cyclesSoFar = 0;
-final sleepDuration = const Duration(milliseconds: 50);
+final sleepDuration = const Duration(milliseconds: 30);
 
 // var initPattern = pattern.patternBlank;
-var initPattern = pattern.pattern4b; // Change initial pattern
+var initPattern = pattern.patternRandom; // Change initial pattern
 TextAreaElement text = querySelector('#code');
 
 int livingCells = 0;

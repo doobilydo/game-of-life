@@ -2,14 +2,97 @@ import 'Cell.dart';
 import 'dart:math';
 import 'globals.dart' as life;
 
+/// Testing with an Exploder.
+/// Successful.
+void patternExploder(Cell cell) {
+  var coordMap = {
+    '34,19': 1,
+    '34,20': 1,
+    '34,21': 1,
+    '34,22': 1,
+    '34,23': 1,
+    '36,19': 1,
+    '36,23': 1,
+    '38,19': 1,
+    '38,20': 1,
+    '38,21': 1,
+    '38,22': 1,
+    '38,23': 1
+  };
+
+  String coord = '${cell.coordX},${cell.coordY}';
+
+  if (coordMap[coord] == 1) {
+    cell.state = 1;
+  } else {
+    cell.state = 0;
+  }
+}
+
+/// Testing with a 10 cell row.
+/// Successful.
+void patternTenCellRow(Cell cell) {
+  var coordMap = {
+    '35,33': 1,
+    '36,33': 1,
+    '37,33': 1,
+    '38,33': 1,
+    '39,33': 1,
+    '40,33': 1,
+    '41,33': 1,
+    '42,33': 1,
+    '43,33': 1,
+    '44,33': 1
+  };
+
+  String coord = '${cell.coordX},${cell.coordY}';
+
+  if (coordMap[coord] == 1) {
+    cell.state = 1;
+  } else {
+    cell.state = 0;
+  }
+}
+
+/// Testing with a Small Exploder.
+/// Successful.
+void patternSmallExploder(Cell cell) {
+  var coordMap = {
+    '22,10': 1,
+    '22,11': 1,
+    '23,10': 1,
+    '23,12': 1,
+    '23,9': 1,
+    '24,10': 1,
+    '24,11': 1
+  };
+
+  String coord = '${cell.coordX},${cell.coordY}';
+
+  if (coordMap[coord] == 1) {
+    cell.state = 1;
+  } else {
+    cell.state = 0;
+  }
+}
+
+/// Testing with a Glider.
+/// Successful.
+void patternGlider(Cell cell) {
+  var dict = {'20,20': 1, '21,20': 1, '22,20': 1, '22,19': 1, '21,18': 1};
+
+  String coord = '${cell.coordX},${cell.coordY}';
+
+  if (dict[coord] == 1) {
+    cell.state = 1;
+  } else {
+    cell.state = 0;
+  }
+}
+
 /// Testing. 4x4 square.
 void patternSquare(Cell cell) {
-  var dict = {
-    '20,20': 1,
-    '21,21': 1,
-    '21,20': 1,
-    '20,21': 1
-  };
+  var dict = {'20,20': 1, '21,21': 1, '21,20': 1, '20,21': 1};
 
   String coord = '${cell.coordX},${cell.coordY}';
 
@@ -74,6 +157,7 @@ void initCorners(Cell cell) {
  * a - Begin new versioning with Dart code
  *
  * Ends with two nodes.
+ * (Correction since bug fix) Ends as 4x4 square.
  */
 void patternD4a(Cell cell) {
   var dict = {
@@ -109,6 +193,8 @@ void patternD4a(Cell cell) {
  *
  * Dart port: Due to bugs through the Python and JavaScript code, I don't
  * think this pattern worked as well as previously thought.
+ *
+ * Since fixes in Dart, this runs successfully until about 600 cycles.
  */
 void pattern4b(Cell cell) {
   var dict = {

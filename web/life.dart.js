@@ -507,17 +507,13 @@
   var dart = [["", "Cell.dart",, K, {
     "^": "",
     Cell: {
-      "^": "Object;state>,nextState,neighbors,neighborsList<,coordX@,coordY<",
+      "^": "Object;state*,nextState,neighbors,neighborsList<,coordX@,coordY<",
       check$0: function() {
         this.checkNeighbors$0();
         this.nextState = this.tick$0();
       },
-      connect$1: function($N) {
-        var t1 = this.neighborsList;
-        if (C.JSArray_methods.indexOf$1(t1, $N) === -1) {
-          t1.push($N);
-          $N.connect$1(this);
-        }
+      grow$0: function() {
+        this.state = this.nextState;
       },
       checkNeighbors$0: function() {
         var t1, t2, _i;
@@ -6767,6 +6763,14 @@
     Capability: {
       "^": "Object;"
     }
+  }], ["dart.math", "dart:math",, P, {
+    "^": "",
+    _JSRandom: {
+      "^": "Object;",
+      nextBool$0: function() {
+        return Math.random() < 0.5;
+      }
+    }
   }], ["dart.typed_data.implementation", "dart:_native_typed_data",, H, {
     "^": "",
     NativeByteBuffer: {
@@ -7020,7 +7024,7 @@
     }, "call$0", "gameoflife__main$closure", 0, 0, 2],
     lifeCycle: function(cycles) {
       if ($.cyclesSoFar <= $.lifeCycles)
-        P.Future_Future$delayed(C.Duration_50000, new R.lifeCycle_closure(new R.lifeCycle_runCycle(cycles, new R.lifeCycle_refresh())), null);
+        P.Future_Future$delayed(C.Duration_30000, new R.lifeCycle_closure(new R.lifeCycle_runCycle(cycles, new R.lifeCycle_refresh())), null);
     },
     initCells: function() {
       var cell, y, t1, x;
@@ -7085,17 +7089,15 @@
           $N = t2[t1];
           t1 = cell;
           t2 = $N;
-          if (C.JSArray_methods.indexOf$1(t1.get$neighborsList(), t2) === -1) {
+          if (C.JSArray_methods.indexOf$1(t1.get$neighborsList(), t2) === -1)
             t1.neighborsList.push(t2);
-            t2.connect$1(t1);
-          }
         } catch (exception) {
           H.unwrapException(exception);
         }
         theta += 0.25;
       }
       cell.checkNeighbors$0();
-    }, "call$1", "gameoflife__meetTheNeighbors$closure", 2, 0, 4],
+    }, "call$1", "gameoflife__meetTheNeighbors$closure", 2, 0, 3],
     iterateMatrix: function(func) {
       var t1, t2, _i, t3;
       for (t1 = $.$get$matrix(), t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
@@ -7108,28 +7110,28 @@
         $.livingCells = $.livingCells + 1;
       } else
         K.drawCell(cell.get$coordX(), cell.coordY, false);
-    }, "call$1", "gameoflife__drawCells$closure", 2, 0, 4],
+    }, "call$1", "gameoflife__drawCells$closure", 2, 0, 3],
     main_clickStart: {
-      "^": "Closure:3;",
+      "^": "Closure:4;",
       call$1: function($event) {
         $.cancel = false;
         R.lifeCycle($.lifeCycles);
       }
     },
     main_clickPause: {
-      "^": "Closure:3;",
+      "^": "Closure:4;",
       call$1: function($event) {
         $.cancel = true;
       }
     },
     main_clickIncrement: {
-      "^": "Closure:3;",
+      "^": "Closure:4;",
       call$1: function($event) {
         R.lifeCycle(1);
       }
     },
     main_clickReset: {
-      "^": "Closure:3;clickPause",
+      "^": "Closure:4;clickPause",
       call$1: function($event) {
         P.print("Reset clicked.");
         this.clickPause.call$1($event);
@@ -7145,15 +7147,21 @@
       "^": "Closure:2;",
       call$0: function() {
         R.iterateMatrix(new R.lifeCycle_refresh_check());
+        R.iterateMatrix(new R.lifeCycle_refresh_grow());
         K.clear();
         $.livingCells = 0;
       }
     },
     lifeCycle_refresh_check: {
-      "^": "Closure:4;",
+      "^": "Closure:3;",
       call$1: function(cell) {
         cell.check$0();
-        cell.state = cell.nextState;
+      }
+    },
+    lifeCycle_refresh_grow: {
+      "^": "Closure:3;",
+      call$1: function(cell) {
+        cell.grow$0();
       }
     },
     lifeCycle_runCycle: {
@@ -7168,7 +7176,7 @@
         if ($.livingCells === 0)
           $.cancel = true;
         if (!$.cancel && t1 <= this.cycles)
-          P.Future_Future$delayed(C.Duration_50000, new R.lifeCycle_runCycle_closure(this), null);
+          P.Future_Future$delayed(C.Duration_30000, new R.lifeCycle_runCycle_closure(this), null);
       }
     },
     lifeCycle_runCycle_closure: {
@@ -7306,18 +7314,48 @@
     }
   }], ["", "patterns.dart",, O, {
     "^": "",
-    pattern4b: [function(cell) {
-      if (P.LinkedHashMap__makeLiteral(["20,21", 1, "21,20", 1, "21,21", 1, "22,20", 1, "24,21", 1, "24,22", 1, "25,21", 1, "21,24", 1, "21,25", 1, "21,22", 1, "24,24", 1, "23,24", 1, "24,23", 1]).$index(0, "" + cell.get$coordX() + "," + cell.coordY) === 1)
-        cell.state = 1;
+    patternRandom: [function(cell) {
+      var t1, x, y, t2;
+      t1 = J.getInterceptor$x(cell);
+      if (C.C__JSRandom.nextBool$0())
+        t1.set$state(cell, 1);
       else
-        cell.state = 0;
-    }, "call$1", "patterns__pattern4b$closure", 2, 0, 4]
+        t1.set$state(cell, 0);
+      x = cell.get$coordX();
+      y = cell.coordY;
+      t1 = x === 0;
+      if (t1 && y === 0)
+        cell.state = 1;
+      t2 = $.$get$columns();
+      if (typeof t2 !== "number")
+        return t2.$sub();
+      if (x === t2 - 1 && y === 0)
+        cell.state = 1;
+      if (t1) {
+        t1 = $.$get$rows();
+        if (typeof t1 !== "number")
+          return t1.$sub();
+        t1 = y === t1 - 1;
+      } else
+        t1 = false;
+      if (t1)
+        cell.state = 1;
+      if (x === t2 - 1) {
+        t1 = $.$get$rows();
+        if (typeof t1 !== "number")
+          return t1.$sub();
+        t1 = y === t1 - 1;
+      } else
+        t1 = false;
+      if (t1)
+        cell.state = 1;
+    }, "call$1", "patterns__patternRandom$closure", 2, 0, 3]
   }], ["", "ui.dart",, K, {
     "^": "",
     displayStats: function(cycle) {
       J.set$innerHtml$x(document.querySelector("#grid-size"), H.S($.$get$rows()) + " x " + H.S($.$get$columns()));
       J.set$innerHtml$x(document.querySelector("#total-cycles"), "Cycles: " + $.lifeCycles);
-      J.set$innerHtml$x(document.querySelector("#length-of-cycle"), "Length of cycle: 0.05 second(s)");
+      J.set$innerHtml$x(document.querySelector("#length-of-cycle"), "Length of cycle: 0.03 second(s)");
       J.set$innerHtml$x(document.querySelector("#current-cycle"), "Cycle: " + $.cyclesSoFar);
     },
     drawCell: function(x, y, living) {
@@ -7565,9 +7603,10 @@
   C.PlainJavaScriptObject_methods = J.PlainJavaScriptObject.prototype;
   C.UnknownJavaScriptObject_methods = J.UnknownJavaScriptObject.prototype;
   C.C_DynamicRuntimeType = new H.DynamicRuntimeType();
+  C.C__JSRandom = new P._JSRandom();
   C.C__RootZone = new P._RootZone();
   C.Duration_0 = new P.Duration(0);
-  C.Duration_50000 = new P.Duration(50000);
+  C.Duration_30000 = new P.Duration(30000);
   C.JS_CONST_0 = function(hooks) {
   if (typeof dartExperimentalFixupGetTag != "function") return hooks;
   hooks.getTag = dartExperimentalFixupGetTag(hooks.getTag);
@@ -7732,10 +7771,10 @@
   $.border = 1;
   $.livingColor = "orange";
   $.deadColor = "black";
-  $.cellSquare = 130;
+  $.cellSquare = 500;
   $.lifeCycles = 10000;
   $.cyclesSoFar = 0;
-  $.initPattern = O.patterns__pattern4b$closure();
+  $.initPattern = O.patterns__patternRandom$closure();
   $.livingCells = 0;
   $.cancel = false;
   $ = null;
@@ -7860,7 +7899,7 @@
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
   init.metadata = [null];
-  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [K.Cell]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, args: [,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [W.Node, W.Node]}];
+  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, v: true, args: [K.Cell]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, args: [,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [W.Node, W.Node]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }

@@ -62,10 +62,6 @@ void main() {
 
 /// Run the program
 void init() {
-
-  // ui.getCanvas().style.width='600px';
-  // ui.getCanvas().style.height='600px';
-
   // Center canvas
   var cellsWide = (((life.drawWidth + life.border) * life.columns));
   var cellsHigh = (((life.drawHeight + life.border) * life.rows));
@@ -90,15 +86,15 @@ void lifeCycle(int cycles) {
     /// Check for living neighbors
     void check(Cell cell) {
       cell.check();
-      cell.grow();
+      // cell.grow();
     }
 
-    /// Advance to the next state.
-    // void grow(Cell cell) {
-    //
-    // }
+    // Advance to the next state.
+    void grow(Cell cell) {
+      cell.grow();
+    }
     iterateMatrix(check);
-    // iterateMatrix(grow);
+    iterateMatrix(grow);
     ui.clear(); // Clear screen
     life.livingCells = 0;
   }
@@ -202,6 +198,9 @@ ${input}
 
 /// Designer
 void loadDesigner() {
+  TextAreaElement code = querySelector('#code');
+  code.style.display = 'inherit';
+
   Element grid = querySelector('#grid');
   var list = new List<String>();
 
@@ -245,9 +244,9 @@ void loadDesigner() {
         for (String line in list) {
           if (list.last == line) {
             // leave out the comma
-            temp = temp + "'$line'";
+            temp = temp + "'$line': 1";
           } else {
-            temp = temp + "'$line',\n";
+            temp = temp + "'$line': 1,\n";
           }
         }
         life.text.setInnerHtml(getText(temp));

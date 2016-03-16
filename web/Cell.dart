@@ -27,7 +27,7 @@ class Cell {
   void connect(Cell N) {
     if (this.neighborsList.indexOf(N) == -1) {
       this.neighborsList.add(N);
-      N.connect(this);
+      // N.connect(this);
     }
   }
 
