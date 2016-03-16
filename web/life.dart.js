@@ -512,8 +512,12 @@
         this.checkNeighbors$0();
         this.nextState = this.tick$0();
       },
-      grow$0: function() {
-        this.state = this.nextState;
+      connect$1: function($N) {
+        var t1 = this.neighborsList;
+        if (C.JSArray_methods.indexOf$1(t1, $N) === -1) {
+          t1.push($N);
+          $N.connect$1(this);
+        }
       },
       checkNeighbors$0: function() {
         var t1, t2, _i;
@@ -7024,7 +7028,7 @@
         P.Future_Future$delayed(C.Duration_10000, new R.lifeCycle_closure(new R.lifeCycle_runCycle(cycles, new R.lifeCycle_refresh())), null);
     },
     initCells: function() {
-      var cell, y, t1, x, t2, t3;
+      var cell, y, t1, x;
       cell = null;
       y = 0;
       while (true) {
@@ -7034,54 +7038,27 @@
         if (!(y < t1))
           break;
         $.$get$matrix().push(H.setRuntimeTypeInfo([], [K.Cell]));
-        t1 = y === 0;
         x = 0;
         while (true) {
-          t2 = $.$get$columns();
-          if (typeof t2 !== "number")
-            return H.iae(t2);
-          if (!(x < t2))
+          t1 = $.$get$columns();
+          if (typeof t1 !== "number")
+            return H.iae(t1);
+          if (!(x < t1))
             break;
-          t2 = $.$get$matrix();
-          if (y >= t2.length)
-            return H.ioore(t2, y);
-          t2[y].push(new K.Cell(1, 0, 0, H.setRuntimeTypeInfo([], [K.Cell]), 0, 0));
-          t2 = $.$get$matrix();
-          if (y >= t2.length)
-            return H.ioore(t2, y);
-          t2 = t2[y];
-          if (x >= t2.length)
-            return H.ioore(t2, x);
-          cell = t2[x];
+          t1 = $.$get$matrix();
+          if (y >= t1.length)
+            return H.ioore(t1, y);
+          t1[y].push(new K.Cell(1, 0, 0, H.setRuntimeTypeInfo([], [K.Cell]), 0, 0));
+          t1 = $.$get$matrix();
+          if (y >= t1.length)
+            return H.ioore(t1, y);
+          t1 = t1[y];
+          if (x >= t1.length)
+            return H.ioore(t1, x);
+          cell = t1[x];
           cell.set$coordX(x);
           cell.coordY = y;
           $.initPattern.call$1(cell);
-          t2 = x === 0;
-          if (t2 && t1)
-            cell.state = 1;
-          t3 = $.$get$columns();
-          if (typeof t3 !== "number")
-            return t3.$sub();
-          if (x === t3 - 1 && t1)
-            cell.state = 1;
-          if (t2) {
-            t2 = $.$get$rows();
-            if (typeof t2 !== "number")
-              return t2.$sub();
-            t2 = y === t2 - 1;
-          } else
-            t2 = false;
-          if (t2)
-            cell.state = 1;
-          if (x === t3 - 1) {
-            t2 = $.$get$rows();
-            if (typeof t2 !== "number")
-              return t2.$sub();
-            t2 = y === t2 - 1;
-          } else
-            t2 = false;
-          if (t2)
-            cell.state = 1;
           ++x;
         }
         ++y;
@@ -7090,7 +7067,7 @@
     },
     meetTheNeighbors: [function(cell) {
       var $X, $Y, $N, theta, t1, t2, exception;
-      for (theta = 0; theta < 1.75;) {
+      for (theta = 0; theta <= 1.75;) {
         t1 = cell.get$coordX();
         t2 = $.$get$coordA().$index(0, theta);
         if (typeof t2 !== "number")
@@ -7113,15 +7090,17 @@
           $N = t2[t1];
           t1 = cell;
           t2 = $N;
-          if (C.JSArray_methods.indexOf$1(t1.get$neighborsList(), t2) === -1)
+          if (C.JSArray_methods.indexOf$1(t1.get$neighborsList(), t2) === -1) {
             t1.neighborsList.push(t2);
+            t2.connect$1(t1);
+          }
         } catch (exception) {
           H.unwrapException(exception);
         }
         theta += 0.25;
       }
       cell.checkNeighbors$0();
-    }, "call$1", "gameoflife__meetTheNeighbors$closure", 2, 0, 3],
+    }, "call$1", "gameoflife__meetTheNeighbors$closure", 2, 0, 4],
     iterateMatrix: function(func) {
       var t1, t2, _i, t3;
       for (t1 = $.$get$matrix(), t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
@@ -7134,28 +7113,28 @@
         $.livingCells = $.livingCells + 1;
       } else
         K.drawCell(cell.get$coordX(), cell.coordY, false);
-    }, "call$1", "gameoflife__drawCells$closure", 2, 0, 3],
+    }, "call$1", "gameoflife__drawCells$closure", 2, 0, 4],
     main_clickStart: {
-      "^": "Closure:4;",
+      "^": "Closure:3;",
       call$1: function($event) {
         $.cancel = false;
         R.lifeCycle($.lifeCycles);
       }
     },
     main_clickPause: {
-      "^": "Closure:4;",
+      "^": "Closure:3;",
       call$1: function($event) {
         $.cancel = true;
       }
     },
     main_clickIncrement: {
-      "^": "Closure:4;",
+      "^": "Closure:3;",
       call$1: function($event) {
         R.lifeCycle(1);
       }
     },
     main_clickReset: {
-      "^": "Closure:4;clickPause",
+      "^": "Closure:3;clickPause",
       call$1: function($event) {
         P.print("Reset clicked.");
         this.clickPause.call$1($event);
@@ -7171,21 +7150,15 @@
       "^": "Closure:2;",
       call$0: function() {
         R.iterateMatrix(new R.lifeCycle_refresh_check());
-        R.iterateMatrix(new R.lifeCycle_refresh_grow());
         K.clear();
         $.livingCells = 0;
       }
     },
     lifeCycle_refresh_check: {
-      "^": "Closure:3;",
+      "^": "Closure:4;",
       call$1: function(cell) {
         cell.check$0();
-      }
-    },
-    lifeCycle_refresh_grow: {
-      "^": "Closure:3;",
-      call$1: function(cell) {
-        cell.grow$0();
+        cell.state = cell.nextState;
       }
     },
     lifeCycle_runCycle: {
@@ -7339,12 +7312,41 @@
   }], ["", "patterns.dart",, O, {
     "^": "",
     patternRandom: [function(cell) {
-      var t1 = J.getInterceptor$x(cell);
+      var t1, x, y, t2;
+      t1 = J.getInterceptor$x(cell);
       if (C.C__JSRandom.nextBool$0())
         t1.set$state(cell, 1);
       else
         t1.set$state(cell, 0);
-    }, "call$1", "patterns__patternRandom$closure", 2, 0, 3]
+      x = cell.get$coordX();
+      y = cell.coordY;
+      t1 = x === 0;
+      if (t1 && y === 0)
+        cell.state = 1;
+      t2 = $.$get$columns();
+      if (typeof t2 !== "number")
+        return t2.$sub();
+      if (x === t2 - 1 && y === 0)
+        cell.state = 1;
+      if (t1) {
+        t1 = $.$get$rows();
+        if (typeof t1 !== "number")
+          return t1.$sub();
+        t1 = y === t1 - 1;
+      } else
+        t1 = false;
+      if (t1)
+        cell.state = 1;
+      if (x === t2 - 1) {
+        t1 = $.$get$rows();
+        if (typeof t1 !== "number")
+          return t1.$sub();
+        t1 = y === t1 - 1;
+      } else
+        t1 = false;
+      if (t1)
+        cell.state = 1;
+    }, "call$1", "patterns__patternRandom$closure", 2, 0, 4]
   }], ["", "ui.dart",, K, {
     "^": "",
     displayStats: function(cycle) {
@@ -7765,7 +7767,7 @@
   $.livingColor = "orange";
   $.deadColor = "black";
   $.cellSquare = 130;
-  $.lifeCycles = 1000;
+  $.lifeCycles = 10000;
   $.cyclesSoFar = 0;
   $.initPattern = O.patterns__patternRandom$closure();
   $.livingCells = 0;
@@ -7895,7 +7897,7 @@
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
   init.metadata = [null];
-  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, v: true, args: [K.Cell]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, args: [,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [W.Node, W.Node]}];
+  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [K.Cell]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, args: [,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [W.Node, W.Node]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }
