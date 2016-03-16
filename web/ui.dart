@@ -4,16 +4,11 @@ import 'dart:html';
 /// Display statistics.
 void displayStats(cycle) {
   // Update stats
-  String stats = '''
-      ${life.rows} x ${life.columns}<br>
-      Cycles: ${life.lifeCycles},
-      Length of cycle: ${life.getDurationInSeconds()} second(s)<br>
-      Cycle: ${life.cyclesSoFar}<br>
-      Last cycle: ${life.lastCycle}<br>
-      ''';
-  // , Living cells: ${life.livingCells}
-
-  life.stats.setInnerHtml(stats);
+  getGridSize().innerHtml = "${life.rows} x ${life.columns}";
+  getTotalCycles().innerHtml = "Cycles: ${life.lifeCycles}";
+  getLengthOfCycle().innerHtml =
+      "Length of cycle: ${life.getDurationInSeconds()} second(s)";
+  getCurrentCycle().innerHtml = "Cycle: ${life.cyclesSoFar}";
 }
 
 /// Draw the cell.
@@ -21,6 +16,22 @@ void displayStats(cycle) {
 void drawCell(int x, y, bool living) {
   draw(x * (life.drawWidth + life.border), y * (life.drawWidth + life.border),
       life.drawWidth, life.drawHeight, living);
+}
+
+LabelElement getGridSize() {
+  return querySelector('#grid-size');
+}
+
+LabelElement getTotalCycles() {
+  return querySelector('#total-cycles');
+}
+
+LabelElement getLengthOfCycle() {
+  return querySelector('#length-of-cycle');
+}
+
+LabelElement getCurrentCycle() {
+  return querySelector('#current-cycle');
 }
 
 /// Get the canvas element

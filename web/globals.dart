@@ -24,10 +24,10 @@ int rows = cellSquare; // Y
 int columns = cellSquare; // X
 int lifeCycles = 10000;
 int cyclesSoFar = 0;
-final sleepDuration = const Duration(milliseconds: 10);
+final sleepDuration = const Duration(milliseconds: 50);
 
 // var initPattern = pattern.patternBlank;
-var initPattern = pattern.patternRandom;
+var initPattern = pattern.pattern4b; // Change initial pattern
 TextAreaElement text = querySelector('#code');
 
 int livingCells = 0;

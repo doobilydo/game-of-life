@@ -507,7 +507,7 @@
   var dart = [["", "Cell.dart",, K, {
     "^": "",
     Cell: {
-      "^": "Object;state*,nextState,neighbors,neighborsList<,coordX@,coordY<",
+      "^": "Object;state>,nextState,neighbors,neighborsList<,coordX@,coordY<",
       check$0: function() {
         this.checkNeighbors$0();
         this.nextState = this.tick$0();
@@ -1273,7 +1273,7 @@
         message.fixed$length = Array;
         message[0] = J.toString$0$(error);
         message[1] = stackTrace == null ? null : J.toString$0$(stackTrace);
-        for (t2 = new P._LinkedHashSetIterator(t1, t1._collection$_modifications, null, null), t2._cell = t1._collection$_first; t2.moveNext$0();)
+        for (t2 = new P._LinkedHashSetIterator(t1, t1._modifications, null, null), t2._cell = t1._first; t2.moveNext$0();)
           J.send$1$x(t2._collection$_current, message);
       },
       eval$1: function(code) {
@@ -3192,7 +3192,7 @@
       }
     },
     JsLinkedHashMap: {
-      "^": "Object;__js_helper$_length,_strings,_nums,_rest,_first,__js_helper$_last,_modifications",
+      "^": "Object;__js_helper$_length,__js_helper$_strings,__js_helper$_nums,__js_helper$_rest,__js_helper$_first,__js_helper$_last,__js_helper$_modifications",
       get$length: function(_) {
         return this.__js_helper$_length;
       },
@@ -3208,12 +3208,12 @@
       containsKey$1: function(key) {
         var strings, nums;
         if (typeof key === "string") {
-          strings = this._strings;
+          strings = this.__js_helper$_strings;
           if (strings == null)
             return false;
           return this._containsTableEntry$2(strings, key);
         } else if (typeof key === "number" && (key & 0x3ffffff) === key) {
-          nums = this._nums;
+          nums = this.__js_helper$_nums;
           if (nums == null)
             return false;
           return this._containsTableEntry$2(nums, key);
@@ -3221,7 +3221,7 @@
           return this.internalContainsKey$1(key);
       },
       internalContainsKey$1: function(key) {
-        var rest = this._rest;
+        var rest = this.__js_helper$_rest;
         if (rest == null)
           return false;
         return this.internalFindBucketIndex$2(this._getTableEntry$2(rest, this.internalComputeHashCode$1(key)), key) >= 0;
@@ -3229,13 +3229,13 @@
       $index: function(_, key) {
         var strings, cell, nums;
         if (typeof key === "string") {
-          strings = this._strings;
+          strings = this.__js_helper$_strings;
           if (strings == null)
             return;
           cell = this._getTableEntry$2(strings, key);
           return cell == null ? null : cell.get$hashMapCellValue();
         } else if (typeof key === "number" && (key & 0x3ffffff) === key) {
-          nums = this._nums;
+          nums = this.__js_helper$_nums;
           if (nums == null)
             return;
           cell = this._getTableEntry$2(nums, key);
@@ -3245,7 +3245,7 @@
       },
       internalGet$1: function(key) {
         var rest, bucket, index;
-        rest = this._rest;
+        rest = this.__js_helper$_rest;
         if (rest == null)
           return;
         bucket = this._getTableEntry$2(rest, this.internalComputeHashCode$1(key));
@@ -3257,24 +3257,24 @@
       $indexSet: function(_, key, value) {
         var strings, nums, rest, hash, bucket, index;
         if (typeof key === "string") {
-          strings = this._strings;
+          strings = this.__js_helper$_strings;
           if (strings == null) {
             strings = this._newHashTable$0();
-            this._strings = strings;
+            this.__js_helper$_strings = strings;
           }
           this.__js_helper$_addHashTableEntry$3(strings, key, value);
         } else if (typeof key === "number" && (key & 0x3ffffff) === key) {
-          nums = this._nums;
+          nums = this.__js_helper$_nums;
           if (nums == null) {
             nums = this._newHashTable$0();
-            this._nums = nums;
+            this.__js_helper$_nums = nums;
           }
           this.__js_helper$_addHashTableEntry$3(nums, key, value);
         } else {
-          rest = this._rest;
+          rest = this.__js_helper$_rest;
           if (rest == null) {
             rest = this._newHashTable$0();
-            this._rest = rest;
+            this.__js_helper$_rest = rest;
           }
           hash = this.internalComputeHashCode$1(key);
           bucket = this._getTableEntry$2(rest, hash);
@@ -3291,15 +3291,15 @@
       },
       remove$1: function(_, key) {
         if (typeof key === "string")
-          return this._removeHashTableEntry$2(this._strings, key);
+          return this._removeHashTableEntry$2(this.__js_helper$_strings, key);
         else if (typeof key === "number" && (key & 0x3ffffff) === key)
-          return this._removeHashTableEntry$2(this._nums, key);
+          return this._removeHashTableEntry$2(this.__js_helper$_nums, key);
         else
           return this.internalRemove$1(key);
       },
       internalRemove$1: function(key) {
         var rest, bucket, index, cell;
-        rest = this._rest;
+        rest = this.__js_helper$_rest;
         if (rest == null)
           return;
         bucket = this._getTableEntry$2(rest, this.internalComputeHashCode$1(key));
@@ -3313,23 +3313,23 @@
       clear$0: function(_) {
         if (this.__js_helper$_length > 0) {
           this.__js_helper$_last = null;
-          this._first = null;
-          this._rest = null;
-          this._nums = null;
-          this._strings = null;
+          this.__js_helper$_first = null;
+          this.__js_helper$_rest = null;
+          this.__js_helper$_nums = null;
+          this.__js_helper$_strings = null;
           this.__js_helper$_length = 0;
-          this._modifications = this._modifications + 1 & 67108863;
+          this.__js_helper$_modifications = this.__js_helper$_modifications + 1 & 67108863;
         }
       },
       forEach$1: function(_, action) {
         var cell, modifications;
-        cell = this._first;
-        modifications = this._modifications;
+        cell = this.__js_helper$_first;
+        modifications = this.__js_helper$_modifications;
         for (; cell != null;) {
           action.call$2(cell.hashMapCellKey, cell.hashMapCellValue);
-          if (modifications !== this._modifications)
+          if (modifications !== this.__js_helper$_modifications)
             throw H.wrapException(new P.ConcurrentModificationError(this));
-          cell = cell._next;
+          cell = cell.__js_helper$_next;
         }
       },
       __js_helper$_addHashTableEntry$3: function(table, key, value) {
@@ -3353,33 +3353,33 @@
       __js_helper$_newLinkedCell$2: function(key, value) {
         var cell, last;
         cell = new H.LinkedHashMapCell(key, value, null, null);
-        if (this._first == null) {
+        if (this.__js_helper$_first == null) {
           this.__js_helper$_last = cell;
-          this._first = cell;
+          this.__js_helper$_first = cell;
         } else {
           last = this.__js_helper$_last;
           cell.__js_helper$_previous = last;
-          last._next = cell;
+          last.__js_helper$_next = cell;
           this.__js_helper$_last = cell;
         }
         ++this.__js_helper$_length;
-        this._modifications = this._modifications + 1 & 67108863;
+        this.__js_helper$_modifications = this.__js_helper$_modifications + 1 & 67108863;
         return cell;
       },
       _unlinkCell$1: function(cell) {
         var previous, next;
         previous = cell.get$__js_helper$_previous();
-        next = cell._next;
+        next = cell.__js_helper$_next;
         if (previous == null)
-          this._first = next;
+          this.__js_helper$_first = next;
         else
-          previous._next = next;
+          previous.__js_helper$_next = next;
         if (next == null)
           this.__js_helper$_last = previous;
         else
           next.__js_helper$_previous = previous;
         --this.__js_helper$_length;
-        this._modifications = this._modifications + 1 & 67108863;
+        this.__js_helper$_modifications = this.__js_helper$_modifications + 1 & 67108863;
       },
       internalComputeHashCode$1: function(key) {
         return J.get$hashCode$(key) & 0x3ffffff;
@@ -3424,7 +3424,7 @@
       }
     },
     LinkedHashMapCell: {
-      "^": "Object;hashMapCellKey<,hashMapCellValue@,_next,__js_helper$_previous<"
+      "^": "Object;hashMapCellKey<,hashMapCellValue@,__js_helper$_next,__js_helper$_previous<"
     },
     LinkedHashMapKeyIterable: {
       "^": "Iterable;_map",
@@ -3434,32 +3434,32 @@
       get$iterator: function(_) {
         var t1, t2;
         t1 = this._map;
-        t2 = new H.LinkedHashMapKeyIterator(t1, t1._modifications, null, null);
-        t2.__js_helper$_cell = t1._first;
+        t2 = new H.LinkedHashMapKeyIterator(t1, t1.__js_helper$_modifications, null, null);
+        t2.__js_helper$_cell = t1.__js_helper$_first;
         return t2;
       },
       forEach$1: function(_, f) {
         var t1, cell, modifications;
         t1 = this._map;
-        cell = t1._first;
-        modifications = t1._modifications;
+        cell = t1.__js_helper$_first;
+        modifications = t1.__js_helper$_modifications;
         for (; cell != null;) {
           f.call$1(cell.hashMapCellKey);
-          if (modifications !== t1._modifications)
+          if (modifications !== t1.__js_helper$_modifications)
             throw H.wrapException(new P.ConcurrentModificationError(t1));
-          cell = cell._next;
+          cell = cell.__js_helper$_next;
         }
       },
       $isEfficientLength: 1
     },
     LinkedHashMapKeyIterator: {
-      "^": "Object;_map,_modifications,__js_helper$_cell,__js_helper$_current",
+      "^": "Object;_map,__js_helper$_modifications,__js_helper$_cell,__js_helper$_current",
       get$current: function() {
         return this.__js_helper$_current;
       },
       moveNext$0: function() {
         var t1 = this._map;
-        if (this._modifications !== t1._modifications)
+        if (this.__js_helper$_modifications !== t1.__js_helper$_modifications)
           throw H.wrapException(new P.ConcurrentModificationError(t1));
         else {
           t1 = this.__js_helper$_cell;
@@ -3468,7 +3468,7 @@
             return false;
           } else {
             this.__js_helper$_current = t1.hashMapCellKey;
-            this.__js_helper$_cell = t1._next;
+            this.__js_helper$_cell = t1.__js_helper$_next;
             return true;
           }
         }
@@ -4638,7 +4638,7 @@
       return t1.charCodeAt(0) == 0 ? t1 : t1;
     },
     _LinkedIdentityHashMap: {
-      "^": "JsLinkedHashMap;__js_helper$_length,_strings,_nums,_rest,_first,__js_helper$_last,_modifications",
+      "^": "JsLinkedHashMap;__js_helper$_length,__js_helper$_strings,__js_helper$_nums,__js_helper$_rest,__js_helper$_first,__js_helper$_last,__js_helper$_modifications",
       internalComputeHashCode$1: function(key) {
         return H.objectHashCode(key) & 0x3ffffff;
       },
@@ -4661,10 +4661,10 @@
       }
     },
     _LinkedHashSet: {
-      "^": "_HashSetBase;_collection$_length,_collection$_strings,_collection$_nums,_collection$_rest,_collection$_first,_last,_collection$_modifications",
+      "^": "_HashSetBase;_collection$_length,_strings,_nums,_rest,_first,_last,_modifications",
       get$iterator: function(_) {
-        var t1 = new P._LinkedHashSetIterator(this, this._collection$_modifications, null, null);
-        t1._cell = this._collection$_first;
+        var t1 = new P._LinkedHashSetIterator(this, this._modifications, null, null);
+        t1._cell = this._first;
         return t1;
       },
       get$length: function(_) {
@@ -4673,12 +4673,12 @@
       contains$1: function(_, object) {
         var strings, nums;
         if (typeof object === "string" && object !== "__proto__") {
-          strings = this._collection$_strings;
+          strings = this._strings;
           if (strings == null)
             return false;
           return strings[object] != null;
         } else if (typeof object === "number" && (object & 0x3ffffff) === object) {
-          nums = this._collection$_nums;
+          nums = this._nums;
           if (nums == null)
             return false;
           return nums[object] != null;
@@ -4686,7 +4686,7 @@
           return this._contains$1(object);
       },
       _contains$1: function(object) {
-        var rest = this._collection$_rest;
+        var rest = this._rest;
         if (rest == null)
           return false;
         return this._findBucketIndex$2(rest[this._computeHashCode$1(object)], object) >= 0;
@@ -4704,45 +4704,45 @@
       },
       _lookup$1: function(object) {
         var rest, bucket, index;
-        rest = this._collection$_rest;
+        rest = this._rest;
         if (rest == null)
           return;
         bucket = rest[this._computeHashCode$1(object)];
         index = this._findBucketIndex$2(bucket, object);
         if (index < 0)
           return;
-        return J.$index$asx(bucket, index).get$_collection$_element();
+        return J.$index$asx(bucket, index).get$_element();
       },
       forEach$1: function(_, action) {
         var cell, modifications;
-        cell = this._collection$_first;
-        modifications = this._collection$_modifications;
+        cell = this._first;
+        modifications = this._modifications;
         for (; cell != null;) {
-          action.call$1(cell._collection$_element);
-          if (modifications !== this._collection$_modifications)
+          action.call$1(cell._element);
+          if (modifications !== this._modifications)
             throw H.wrapException(new P.ConcurrentModificationError(this));
-          cell = cell._collection$_next;
+          cell = cell._next;
         }
       },
       add$1: function(_, element) {
         var strings, table, nums;
         if (typeof element === "string" && element !== "__proto__") {
-          strings = this._collection$_strings;
+          strings = this._strings;
           if (strings == null) {
             table = Object.create(null);
             table["<non-identifier-key>"] = table;
             delete table["<non-identifier-key>"];
-            this._collection$_strings = table;
+            this._strings = table;
             strings = table;
           }
           return this._addHashTableEntry$2(strings, element);
         } else if (typeof element === "number" && (element & 0x3ffffff) === element) {
-          nums = this._collection$_nums;
+          nums = this._nums;
           if (nums == null) {
             table = Object.create(null);
             table["<non-identifier-key>"] = table;
             delete table["<non-identifier-key>"];
-            this._collection$_nums = table;
+            this._nums = table;
             nums = table;
           }
           return this._addHashTableEntry$2(nums, element);
@@ -4751,10 +4751,10 @@
       },
       _add$1: function(element) {
         var rest, hash, bucket;
-        rest = this._collection$_rest;
+        rest = this._rest;
         if (rest == null) {
           rest = P._LinkedHashSet__newHashTable();
-          this._collection$_rest = rest;
+          this._rest = rest;
         }
         hash = this._computeHashCode$1(element);
         bucket = rest[hash];
@@ -4769,15 +4769,15 @@
       },
       remove$1: function(_, object) {
         if (typeof object === "string" && object !== "__proto__")
-          return this._collection$_removeHashTableEntry$2(this._collection$_strings, object);
+          return this._collection$_removeHashTableEntry$2(this._strings, object);
         else if (typeof object === "number" && (object & 0x3ffffff) === object)
-          return this._collection$_removeHashTableEntry$2(this._collection$_nums, object);
+          return this._collection$_removeHashTableEntry$2(this._nums, object);
         else
           return this._remove$1(object);
       },
       _remove$1: function(object) {
         var rest, bucket, index;
-        rest = this._collection$_rest;
+        rest = this._rest;
         if (rest == null)
           return false;
         bucket = rest[this._computeHashCode$1(object)];
@@ -4790,12 +4790,12 @@
       clear$0: function(_) {
         if (this._collection$_length > 0) {
           this._last = null;
-          this._collection$_first = null;
-          this._collection$_rest = null;
-          this._collection$_nums = null;
-          this._collection$_strings = null;
+          this._first = null;
+          this._rest = null;
+          this._nums = null;
+          this._strings = null;
           this._collection$_length = 0;
-          this._collection$_modifications = this._collection$_modifications + 1 & 67108863;
+          this._modifications = this._modifications + 1 & 67108863;
         }
       },
       _addHashTableEntry$2: function(table, element) {
@@ -4818,33 +4818,33 @@
       _newLinkedCell$1: function(element) {
         var cell, last;
         cell = new P._LinkedHashSetCell(element, null, null);
-        if (this._collection$_first == null) {
+        if (this._first == null) {
           this._last = cell;
-          this._collection$_first = cell;
+          this._first = cell;
         } else {
           last = this._last;
           cell._previous = last;
-          last._collection$_next = cell;
+          last._next = cell;
           this._last = cell;
         }
         ++this._collection$_length;
-        this._collection$_modifications = this._collection$_modifications + 1 & 67108863;
+        this._modifications = this._modifications + 1 & 67108863;
         return cell;
       },
       _collection$_unlinkCell$1: function(cell) {
         var previous, next;
         previous = cell.get$_previous();
-        next = cell._collection$_next;
+        next = cell._next;
         if (previous == null)
-          this._collection$_first = next;
+          this._first = next;
         else
-          previous._collection$_next = next;
+          previous._next = next;
         if (next == null)
           this._last = previous;
         else
           next._previous = previous;
         --this._collection$_length;
-        this._collection$_modifications = this._collection$_modifications + 1 & 67108863;
+        this._modifications = this._modifications + 1 & 67108863;
       },
       _computeHashCode$1: function(element) {
         return J.get$hashCode$(element) & 0x3ffffff;
@@ -4855,7 +4855,7 @@
           return -1;
         $length = bucket.length;
         for (i = 0; i < $length; ++i)
-          if (J.$eq$(bucket[i].get$_collection$_element(), element))
+          if (J.$eq$(bucket[i].get$_element(), element))
             return i;
         return -1;
       },
@@ -4870,16 +4870,16 @@
       }
     },
     _LinkedHashSetCell: {
-      "^": "Object;_collection$_element<,_collection$_next,_previous<"
+      "^": "Object;_element<,_next,_previous<"
     },
     _LinkedHashSetIterator: {
-      "^": "Object;_set,_collection$_modifications,_cell,_collection$_current",
+      "^": "Object;_set,_modifications,_cell,_collection$_current",
       get$current: function() {
         return this._collection$_current;
       },
       moveNext$0: function() {
         var t1 = this._set;
-        if (this._collection$_modifications !== t1._collection$_modifications)
+        if (this._modifications !== t1._modifications)
           throw H.wrapException(new P.ConcurrentModificationError(t1));
         else {
           t1 = this._cell;
@@ -4887,8 +4887,8 @@
             this._collection$_current = null;
             return false;
           } else {
-            this._collection$_current = t1._collection$_element;
-            this._cell = t1._collection$_next;
+            this._collection$_current = t1._element;
+            this._cell = t1._next;
             return true;
           }
         }
@@ -5087,7 +5087,7 @@
       },
       forEach$1: function(_, f) {
         var t1;
-        for (t1 = new P._LinkedHashSetIterator(this, this._collection$_modifications, null, null), t1._cell = this._collection$_first; t1.moveNext$0();)
+        for (t1 = new P._LinkedHashSetIterator(this, this._modifications, null, null), t1._cell = this._first; t1.moveNext$0();)
           f.call$1(t1._collection$_current);
       },
       $isEfficientLength: 1
@@ -5589,9 +5589,6 @@
       }
       return result;
     },
-    querySelector: function(selectors) {
-      return document.querySelector(selectors);
-    },
     HtmlElement: {
       "^": "Element;",
       $isHtmlElement: 1,
@@ -5741,6 +5738,9 @@
       }, function($receiver, html, treeSanitizer) {
         return this.createFragment$3$treeSanitizer$validator($receiver, html, treeSanitizer, null);
       }, "createFragment$2$treeSanitizer", null, null, "get$createFragment", 2, 5, null, 0, 0],
+      set$innerHtml: function(receiver, html) {
+        this.setInnerHtml$1(receiver, html);
+      },
       setInnerHtml$3$treeSanitizer$validator: function(receiver, html, treeSanitizer, validator) {
         receiver.textContent = null;
         receiver.appendChild(this.createFragment$3$treeSanitizer$validator(receiver, html, treeSanitizer, validator));
@@ -6129,17 +6129,17 @@
       $isEfficientLength: 1
     },
     _AttributeMap: {
-      "^": "Object;_element<",
+      "^": "Object;_html$_element<",
       forEach$1: function(_, f) {
         var t1, t2, t3, _i, key;
-        for (t1 = this.get$keys(), t2 = t1.length, t3 = this._element, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
+        for (t1 = this.get$keys(), t2 = t1.length, t3 = this._html$_element, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
           key = t1[_i];
           f.call$2(key, t3.getAttribute(key));
         }
       },
       get$keys: function() {
         var attributes, keys, len, i, t1;
-        attributes = this._element.attributes;
+        attributes = this._html$_element.attributes;
         keys = H.setRuntimeTypeInfo([], [P.String]);
         for (len = attributes.length, i = 0; i < len; ++i) {
           if (i >= attributes.length)
@@ -6152,12 +6152,12 @@
       }
     },
     _ElementAttributeMap: {
-      "^": "_AttributeMap;_element",
+      "^": "_AttributeMap;_html$_element",
       $index: function(_, key) {
-        return this._element.getAttribute(key);
+        return this._html$_element.getAttribute(key);
       },
       $indexSet: function(_, key, value) {
-        this._element.setAttribute(key, value);
+        this._html$_element.setAttribute(key, value);
       },
       get$length: function(_) {
         return this.get$keys().length;
@@ -6323,7 +6323,7 @@
           return true;
         if (attributeName === "template" && value === "")
           return true;
-        if (J.get$attributes$x(element)._element.getAttribute("template") === "")
+        if (J.get$attributes$x(element)._html$_element.getAttribute("template") === "")
           return this._templateAttrs.contains$1(0, attributeName);
         return false;
       },
@@ -6408,7 +6408,7 @@
         isAttr = null;
         try {
           attrs = J.get$attributes$x(element);
-          isAttr = attrs.get$_element().getAttribute("is");
+          isAttr = attrs.get$_html$_element().getAttribute("is");
           corruptedTest1 = function(element) {
             if (!(element.attributes instanceof NamedNodeMap))
               return true;
@@ -6482,7 +6482,7 @@
           }
         t1 = attrs.get$keys();
         keys = H.setRuntimeTypeInfo(t1.slice(), [H.getTypeArgumentByIndex(t1, 0)]);
-        for (i = attrs.get$keys().length - 1, t1 = attrs._element; i >= 0; --i) {
+        for (i = attrs.get$keys().length - 1, t1 = attrs._html$_element; i >= 0; --i) {
           if (i >= keys.length)
             return H.ioore(keys, i);
           $name = keys[i];
@@ -6672,6 +6672,9 @@
     },
     SvgElement: {
       "^": "Element;",
+      set$innerHtml: function(receiver, value) {
+        this.setInnerHtml$1(receiver, value);
+      },
       createFragment$3$treeSanitizer$validator: function(receiver, svg, treeSanitizer, validator) {
         var t1, html, fragment, svgFragment, root;
         t1 = H.setRuntimeTypeInfo([], [W.NodeValidator]);
@@ -6763,14 +6766,6 @@
     "^": "",
     Capability: {
       "^": "Object;"
-    }
-  }], ["dart.math", "dart:math",, P, {
-    "^": "",
-    _JSRandom: {
-      "^": "Object;",
-      nextBool$0: function() {
-        return Math.random() < 0.5;
-      }
     }
   }], ["dart.typed_data.implementation", "dart:_native_typed_data",, H, {
     "^": "",
@@ -7025,7 +7020,7 @@
     }, "call$0", "gameoflife__main$closure", 0, 0, 2],
     lifeCycle: function(cycles) {
       if ($.cyclesSoFar <= $.lifeCycles)
-        P.Future_Future$delayed(C.Duration_10000, new R.lifeCycle_closure(new R.lifeCycle_runCycle(cycles, new R.lifeCycle_refresh())), null);
+        P.Future_Future$delayed(C.Duration_50000, new R.lifeCycle_closure(new R.lifeCycle_runCycle(cycles, new R.lifeCycle_refresh())), null);
     },
     initCells: function() {
       var cell, y, t1, x;
@@ -7173,7 +7168,7 @@
         if ($.livingCells === 0)
           $.cancel = true;
         if (!$.cancel && t1 <= this.cycles)
-          P.Future_Future$delayed(C.Duration_10000, new R.lifeCycle_runCycle_closure(this), null);
+          P.Future_Future$delayed(C.Duration_50000, new R.lifeCycle_runCycle_closure(this), null);
       }
     },
     lifeCycle_runCycle_closure: {
@@ -7311,47 +7306,19 @@
     }
   }], ["", "patterns.dart",, O, {
     "^": "",
-    patternRandom: [function(cell) {
-      var t1, x, y, t2;
-      t1 = J.getInterceptor$x(cell);
-      if (C.C__JSRandom.nextBool$0())
-        t1.set$state(cell, 1);
+    pattern4b: [function(cell) {
+      if (P.LinkedHashMap__makeLiteral(["20,21", 1, "21,20", 1, "21,21", 1, "22,20", 1, "24,21", 1, "24,22", 1, "25,21", 1, "21,24", 1, "21,25", 1, "21,22", 1, "24,24", 1, "23,24", 1, "24,23", 1]).$index(0, "" + cell.get$coordX() + "," + cell.coordY) === 1)
+        cell.state = 1;
       else
-        t1.set$state(cell, 0);
-      x = cell.get$coordX();
-      y = cell.coordY;
-      t1 = x === 0;
-      if (t1 && y === 0)
-        cell.state = 1;
-      t2 = $.$get$columns();
-      if (typeof t2 !== "number")
-        return t2.$sub();
-      if (x === t2 - 1 && y === 0)
-        cell.state = 1;
-      if (t1) {
-        t1 = $.$get$rows();
-        if (typeof t1 !== "number")
-          return t1.$sub();
-        t1 = y === t1 - 1;
-      } else
-        t1 = false;
-      if (t1)
-        cell.state = 1;
-      if (x === t2 - 1) {
-        t1 = $.$get$rows();
-        if (typeof t1 !== "number")
-          return t1.$sub();
-        t1 = y === t1 - 1;
-      } else
-        t1 = false;
-      if (t1)
-        cell.state = 1;
-    }, "call$1", "patterns__patternRandom$closure", 2, 0, 4]
+        cell.state = 0;
+    }, "call$1", "patterns__pattern4b$closure", 2, 0, 4]
   }], ["", "ui.dart",, K, {
     "^": "",
     displayStats: function(cycle) {
-      var stats = "      " + H.S($.$get$rows()) + " x " + H.S($.$get$columns()) + "<br>\n      Cycles: " + $.lifeCycles + ",\n      Length of cycle: 0.01 second(s)<br>\n      Cycle: " + $.cyclesSoFar + "<br>\n      Last cycle: " + $.lastCycle + "<br>\n      ";
-      J.setInnerHtml$1$x($.$get$stats(), stats);
+      J.set$innerHtml$x(document.querySelector("#grid-size"), H.S($.$get$rows()) + " x " + H.S($.$get$columns()));
+      J.set$innerHtml$x(document.querySelector("#total-cycles"), "Cycles: " + $.lifeCycles);
+      J.set$innerHtml$x(document.querySelector("#length-of-cycle"), "Length of cycle: 0.05 second(s)");
+      J.set$innerHtml$x(document.querySelector("#current-cycle"), "Cycle: " + $.cyclesSoFar);
     },
     drawCell: function(x, y, living) {
       var t1, t2, t3, color;
@@ -7473,6 +7440,9 @@
   J.set$href$x = function(receiver, value) {
     return J.getInterceptor$x(receiver).set$href(receiver, value);
   };
+  J.set$innerHtml$x = function(receiver, value) {
+    return J.getInterceptor$x(receiver).set$innerHtml(receiver, value);
+  };
   J.get$attributes$x = function(receiver) {
     return J.getInterceptor$x(receiver).get$attributes(receiver);
   };
@@ -7559,9 +7529,6 @@
   J.send$1$x = function(receiver, a0) {
     return J.getInterceptor$x(receiver).send$1(receiver, a0);
   };
-  J.setInnerHtml$1$x = function(receiver, a0) {
-    return J.getInterceptor$x(receiver).setInnerHtml$1(receiver, a0);
-  };
   J.toLowerCase$0$s = function(receiver) {
     return J.getInterceptor$s(receiver).toLowerCase$0(receiver);
   };
@@ -7598,10 +7565,9 @@
   C.PlainJavaScriptObject_methods = J.PlainJavaScriptObject.prototype;
   C.UnknownJavaScriptObject_methods = J.UnknownJavaScriptObject.prototype;
   C.C_DynamicRuntimeType = new H.DynamicRuntimeType();
-  C.C__JSRandom = new P._JSRandom();
   C.C__RootZone = new P._RootZone();
   C.Duration_0 = new P.Duration(0);
-  C.Duration_10000 = new P.Duration(10000);
+  C.Duration_50000 = new P.Duration(50000);
   C.JS_CONST_0 = function(hooks) {
   if (typeof dartExperimentalFixupGetTag != "function") return hooks;
   hooks.getTag = dartExperimentalFixupGetTag(hooks.getTag);
@@ -7769,9 +7735,8 @@
   $.cellSquare = 130;
   $.lifeCycles = 10000;
   $.cyclesSoFar = 0;
-  $.initPattern = O.patterns__patternRandom$closure();
+  $.initPattern = O.patterns__pattern4b$closure();
   $.livingCells = 0;
-  $.lastCycle = 0;
   $.cancel = false;
   $ = null;
   init.isHunkLoaded = function(hunkHash) {
@@ -7881,9 +7846,7 @@
     return $.drawSquare;
   }, "drawWidth", "drawHeight", "$get$drawHeight", function() {
     return $.drawSquare;
-  }, "drawHeight", "stats", "$get$stats", function() {
-    return W.querySelector("#stats");
-  }, "stats", "rows", "$get$rows", function() {
+  }, "drawHeight", "rows", "$get$rows", function() {
     return $.cellSquare;
   }, "rows", "columns", "$get$columns", function() {
     return $.cellSquare;
