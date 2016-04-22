@@ -504,39 +504,7 @@
   }
   Isolate.functionThatReturnsNull = function() {
   };
-  var dart = [["", "Cell.dart",, K, {
-    "^": "",
-    Cell: {
-      "^": "Object;state*,nextState,neighbors,neighborsList<,coordX@,coordY<",
-      check$0: function() {
-        this.checkNeighbors$0();
-        this.nextState = this.tick$0();
-      },
-      grow$0: function() {
-        this.state = this.nextState;
-      },
-      checkNeighbors$0: function() {
-        var t1, t2, _i;
-        this.neighbors = 0;
-        for (t1 = this.neighborsList, t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
-          if (J.$eq$(J.get$state$x(t1[_i]), 1))
-            ++this.neighbors;
-      },
-      tick$0: function() {
-        if (this.state === 1) {
-          var t1 = this.neighbors;
-          if (t1 < 2)
-            return 0;
-          if (t1 === 2 || t1 === 3)
-            return 1;
-          if (t1 > 3)
-            return 0;
-        } else if (this.neighbors === 3)
-          return 1;
-        return 0;
-      }
-    }
-  }], ["_foreign_helper", "dart:_foreign_helper",, H, {
+  var dart = [["_foreign_helper", "dart:_foreign_helper",, H, {
     "^": "",
     JS_CONST: {
       "^": "Object;code"
@@ -804,6 +772,14 @@
         }
         throw H.wrapException(new P.UnsupportedError("" + receiver));
       },
+      round$0: function(receiver) {
+        if (receiver > 0) {
+          if (receiver !== 1 / 0)
+            return Math.round(receiver);
+        } else if (receiver > -1 / 0)
+          return 0 - Math.round(0 - receiver);
+        throw H.wrapException(new P.UnsupportedError("" + receiver));
+      },
       toString$0: function(receiver) {
         if (receiver === 0 && 1 / receiver < 0)
           return "-0.0";
@@ -817,6 +793,25 @@
         if (typeof other !== "number")
           throw H.wrapException(H.argumentErrorValue(other));
         return receiver + other;
+      },
+      $sub: function(receiver, other) {
+        if (typeof other !== "number")
+          throw H.wrapException(H.argumentErrorValue(other));
+        return receiver - other;
+      },
+      $mul: function(receiver, other) {
+        if (typeof other !== "number")
+          throw H.wrapException(H.argumentErrorValue(other));
+        return receiver * other;
+      },
+      $tdiv: function(receiver, other) {
+        if ((receiver | 0) === receiver && (other | 0) === other && 0 !== other && -1 !== other)
+          return receiver / other | 0;
+        else {
+          if (typeof other !== "number")
+            H.throwExpression(H.argumentErrorValue(other));
+          return this.toInt$0(receiver / other);
+        }
       },
       _tdivFast$1: function(receiver, other) {
         return (receiver | 0) === receiver ? receiver / other | 0 : this.toInt$0(receiver / other);
@@ -2026,6 +2021,28 @@
     Primitives_objectToHumanReadableString: function(object) {
       return "Instance of '" + H.Primitives_objectTypeName(object) + "'";
     },
+    Primitives_dateNow: [function() {
+      return Date.now();
+    }, "call$0", "_js_helper_Primitives_dateNow$closure", 0, 0, 15],
+    Primitives_initTicker: function() {
+      var $window, performance;
+      if ($.Primitives_timerFrequency != null)
+        return;
+      $.Primitives_timerFrequency = 1000;
+      $.Primitives_timerTicks = H._js_helper_Primitives_dateNow$closure();
+      if (typeof window == "undefined")
+        return;
+      $window = window;
+      if ($window == null)
+        return;
+      performance = $window.performance;
+      if (performance == null)
+        return;
+      if (typeof performance.now != "function")
+        return;
+      $.Primitives_timerFrequency = 1000000;
+      $.Primitives_timerTicks = new H.Primitives_initTicker_closure(performance);
+    },
     Primitives_lazyAsJsDate: function(receiver) {
       if (receiver.date === void 0)
         receiver.date = new Date(receiver._value);
@@ -2849,6 +2866,12 @@
         }
       }
     },
+    Primitives_initTicker_closure: {
+      "^": "Closure:0;performance",
+      call$0: function() {
+        return C.JSNumber_methods.toInt$0(Math.floor(1000 * this.performance.now()));
+      }
+    },
     TypeErrorDecoder: {
       "^": "Object;_pattern,_arguments,_argumentsExpr,_expr,_method,_receiver",
       matchTypeError$1: function(message) {
@@ -3486,6 +3509,38 @@
       "^": "Closure:10;prototypeForTag",
       call$1: function(tag) {
         return this.prototypeForTag(tag);
+      }
+    }
+  }], ["", "cell.dart",, A, {
+    "^": "",
+    Cell: {
+      "^": "Object;state*,nextState,neighbors,neighborsList<,coordX@,coordY<",
+      check$0: function() {
+        this.checkNeighbors$0();
+        this.nextState = this.tick$0();
+      },
+      grow$0: function() {
+        this.state = this.nextState;
+      },
+      checkNeighbors$0: function() {
+        var t1, t2, _i;
+        this.neighbors = 0;
+        for (t1 = this.neighborsList, t2 = t1.length, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i)
+          if (J.$eq$(J.get$state$x(t1[_i]), 1))
+            ++this.neighbors;
+      },
+      tick$0: function() {
+        if (this.state === 1) {
+          var t1 = this.neighbors;
+          if (t1 < 2)
+            return 0;
+          if (t1 === 2 || t1 === 3)
+            return 1;
+          if (t1 > 3)
+            return 0;
+        } else if (this.neighbors === 3)
+          return 1;
+        return 0;
       }
     }
   }], ["dart._internal", "dart:_internal",, H, {
@@ -5194,9 +5249,22 @@
     },
     "+double": 0,
     Duration: {
-      "^": "Object;_duration",
+      "^": "Object;_duration<",
       $add: function(_, other) {
         return new P.Duration(C.JSInt_methods.$add(this._duration, other.get$_duration()));
+      },
+      $sub: function(_, other) {
+        return new P.Duration(this._duration - other.get$_duration());
+      },
+      $mul: function(_, factor) {
+        return new P.Duration(C.JSInt_methods.round$0(this._duration * factor));
+      },
+      $tdiv: function(_, quotient) {
+        if (quotient === 0)
+          throw H.wrapException(new P.IntegerDivisionByZeroException());
+        if (typeof quotient !== "number")
+          return H.iae(quotient);
+        return new P.Duration(C.JSInt_methods.$tdiv(this._duration, quotient));
       },
       $lt: function(_, other) {
         return C.JSInt_methods.$lt(this._duration, other.get$_duration());
@@ -5406,6 +5474,12 @@
         return "Exception: " + H.S(t1);
       }
     },
+    IntegerDivisionByZeroException: {
+      "^": "Object;",
+      toString$0: function(_) {
+        return "IntegerDivisionByZeroException";
+      }
+    },
     Expando: {
       "^": "Object;name,_jsWeakMapOrKey",
       toString$0: function(_) {
@@ -5531,6 +5605,35 @@
     StackTrace: {
       "^": "Object;"
     },
+    Stopwatch: {
+      "^": "Object;_start,_stop",
+      start$0: function(_) {
+        var t1, t2;
+        t1 = this._start == null;
+        if (!t1 && this._stop == null)
+          return;
+        t2 = $.Primitives_timerTicks;
+        if (t1)
+          this._start = t2.call$0();
+        else {
+          this._start = J.$sub$n(t2.call$0(), J.$sub$n(this._stop, this._start));
+          this._stop = null;
+        }
+      },
+      stop$0: function(_) {
+        if (!(this._start != null && this._stop == null))
+          return;
+        this._stop = $.Primitives_timerTicks.call$0();
+      },
+      get$elapsedTicks: function() {
+        var t1, t2;
+        t1 = this._start;
+        if (t1 == null)
+          return 0;
+        t2 = this._stop;
+        return t2 == null ? J.$sub$n($.Primitives_timerTicks.call$0(), this._start) : J.$sub$n(t2, t1);
+      }
+    },
     String: {
       "^": "Object;"
     },
@@ -5643,9 +5746,6 @@
       },
       scale$2: function(receiver, x, y) {
         return receiver.scale(x, y);
-      },
-      translate$2: function(receiver, x, y) {
-        return receiver.translate(x, y);
       },
       "%": "CanvasRenderingContext2D"
     },
@@ -6983,8 +7083,12 @@
   }], ["gameoflife", "life.dart",, R, {
     "^": "",
     main: [function() {
-      var t1, t2, t3, t4, t5, t6, t7, t8;
-      P.print("Init() started....");
+      var stopwatch, t1, t2, t3, cellsWide, cellsHigh;
+      P.print("main() started....");
+      stopwatch = new P.Stopwatch(null, null);
+      H.Primitives_initTicker();
+      $.Stopwatch__frequency = $.Primitives_timerFrequency;
+      stopwatch.start$0(0);
       t1 = $.$get$drawWidth();
       t2 = $.border;
       if (typeof t1 !== "number")
@@ -6992,26 +7096,36 @@
       t3 = $.$get$columns();
       if (typeof t3 !== "number")
         return H.iae(t3);
-      t4 = $.$get$drawHeight();
-      if (typeof t4 !== "number")
-        return t4.$add();
-      t5 = $.$get$rows();
-      if (typeof t5 !== "number")
-        return H.iae(t5);
-      t6 = $.$get$context();
-      t7 = $.$get$canvasWidth();
-      if (typeof t7 !== "number")
-        return t7.$div();
-      t8 = $.$get$canvasHeight();
-      if (typeof t8 !== "number")
-        return t8.$div();
-      J.translate$2$x(t6, t7 / 2 - (t1 + t2) * t3 / 2, t8 / 2 - (t4 + t2) * t5 / 2);
-      J.scale$2$x($.$get$context(), 1, 1);
+      cellsWide = (t1 + t2) * t3;
+      t3 = $.$get$drawHeight();
+      if (typeof t3 !== "number")
+        return t3.$add();
+      t1 = $.$get$rows();
+      if (typeof t1 !== "number")
+        return H.iae(t1);
+      cellsHigh = (t3 + t2) * t1;
+      P.print("Cells wide: " + cellsWide);
+      P.print("Cells high: " + cellsHigh);
+      t1 = $.$get$canvasWidth();
+      if (typeof t1 !== "number")
+        return t1.$div();
+      P.print("ratio width: " + H.S(t1 / cellsWide));
+      t1 = $.$get$canvasHeight();
+      if (typeof t1 !== "number")
+        return t1.$div();
+      P.print("ratio height: " + H.S(t1 / cellsHigh));
+      t1 = $.$get$canvasWidth();
+      if (typeof t1 !== "number")
+        return t1.$div();
+      t2 = $.$get$canvasHeight();
+      if (typeof t2 !== "number")
+        return t2.$div();
+      J.scale$2$x(J.getContext$1$x(document.querySelector("#canvas"), "2d"), t1 / cellsWide, t2 / cellsHigh);
       R.initCells();
       R.iterateMatrix(R.gameoflife__drawCells$closure());
       K.displayStats(0);
-      t5 = document.querySelector("#start");
-      J._addEventListener$3$x(t5, "click", new R.main_clickStart(), false);
+      t2 = document.querySelector("#start");
+      J._addEventListener$3$x(t2, "click", new R.main_clickStart(), false);
       t1 = new R.main_clickPause();
       t2 = document.querySelector("#pause");
       J._addEventListener$3$x(t2, "click", t1, false);
@@ -7019,7 +7133,11 @@
       J._addEventListener$3$x(t2, "click", new R.main_clickIncrement(), false);
       t2 = document.querySelector("#reset");
       J._addEventListener$3$x(t2, "click", new R.main_clickReset(t1), false);
-      P.print("Init() complete.");
+      t1 = new R.main_avg();
+      t1.call$2($.$get$drawTimes(), "Draw");
+      t1.call$2($.$get$meetingTimes(), "Meet");
+      stopwatch.stop$0(0);
+      P.print("main() complete. " + H.S(J.$tdiv$n(J.$mul$ns(stopwatch.get$elapsedTicks(), 1000), $.Stopwatch__frequency)) + " millliseconds");
       return;
     }, "call$0", "gameoflife__main$closure", 0, 0, 2],
     lifeCycle: function(cycles) {
@@ -7036,7 +7154,7 @@
           return H.iae(t1);
         if (!(y < t1))
           break;
-        $.$get$matrix().push(H.setRuntimeTypeInfo([], [K.Cell]));
+        $.$get$matrix().push([]);
         x = 0;
         while (true) {
           t1 = $.$get$columns();
@@ -7047,7 +7165,7 @@
           t1 = $.$get$matrix();
           if (y >= t1.length)
             return H.ioore(t1, y);
-          t1[y].push(new K.Cell(1, 0, 0, H.setRuntimeTypeInfo([], [K.Cell]), 0, 0));
+          t1[y].push(new A.Cell(1, 0, 0, [], 0, 0));
           t1 = $.$get$matrix();
           if (y >= t1.length)
             return H.ioore(t1, y);
@@ -7065,7 +7183,11 @@
       R.iterateMatrix(R.gameoflife__meetTheNeighbors$closure());
     },
     meetTheNeighbors: [function(cell) {
-      var $X, $Y, $N, theta, t1, t2, exception;
+      var $X, $Y, $N, stopwatch, theta, t1, t2, exception;
+      stopwatch = new P.Stopwatch(null, null);
+      H.Primitives_initTicker();
+      $.Stopwatch__frequency = $.Primitives_timerFrequency;
+      stopwatch.start$0(0);
       for (theta = 0; theta <= 1.75;) {
         t1 = cell.get$coordX();
         t2 = $.$get$coordA().$index(0, theta);
@@ -7097,6 +7219,8 @@
         theta += 0.25;
       }
       cell.checkNeighbors$0();
+      stopwatch.stop$0(0);
+      $.$get$meetingTimes().push(J.$tdiv$n(J.$mul$ns(stopwatch.get$elapsedTicks(), 1000000), $.Stopwatch__frequency));
     }, "call$1", "gameoflife__meetTheNeighbors$closure", 2, 0, 3],
     iterateMatrix: function(func) {
       var t1, t2, _i, t3;
@@ -7114,14 +7238,14 @@
     main_clickStart: {
       "^": "Closure:4;",
       call$1: function($event) {
-        $.cancel = false;
+        $.isCancelled = false;
         R.lifeCycle($.lifeCycles);
       }
     },
     main_clickPause: {
       "^": "Closure:4;",
       call$1: function($event) {
-        $.cancel = true;
+        $.isCancelled = true;
       }
     },
     main_clickIncrement: {
@@ -7135,7 +7259,7 @@
       call$1: function($event) {
         P.print("Reset clicked.");
         this.clickPause.call$1($event);
-        K.clear();
+        J.clearRect$4$x(J.getContext$1$x(document.querySelector("#canvas"), "2d"), 0, 0, $.$get$canvasWidth(), $.$get$canvasHeight());
         $.cyclesSoFar = 0;
         $.livingCells = 0;
         R.iterateMatrix($.initPattern);
@@ -7143,12 +7267,25 @@
         K.displayStats(0);
       }
     },
+    main_avg: {
+      "^": "Closure:14;",
+      call$2: function(list, type) {
+        var t1, total, _i, t2, time;
+        for (t1 = list.length, total = 0, _i = 0; t2 = list.length, _i < t2; t2 === t1 || (0, H.throwConcurrentModificationError)(list), ++_i) {
+          time = list[_i];
+          if (typeof time !== "number")
+            return H.iae(time);
+          total += time;
+        }
+        P.print(type + " average: " + H.S(total / t2) + " microseconds");
+      }
+    },
     lifeCycle_refresh: {
       "^": "Closure:2;",
       call$0: function() {
         R.iterateMatrix(new R.lifeCycle_refresh_check());
         R.iterateMatrix(new R.lifeCycle_refresh_grow());
-        K.clear();
+        J.clearRect$4$x(J.getContext$1$x(document.querySelector("#canvas"), "2d"), 0, 0, $.$get$canvasWidth(), $.$get$canvasHeight());
         $.livingCells = 0;
       }
     },
@@ -7174,8 +7311,8 @@
         t1 = $.cyclesSoFar + 1;
         $.cyclesSoFar = t1;
         if ($.livingCells === 0)
-          $.cancel = true;
-        if (!$.cancel && t1 <= this.cycles)
+          $.isCancelled = true;
+        if ($.isCancelled !== true && t1 <= this.cycles)
           P.Future_Future$delayed(C.Duration_30000, new R.lifeCycle_runCycle_closure(this), null);
       }
     },
@@ -7353,27 +7490,37 @@
   }], ["", "ui.dart",, K, {
     "^": "",
     displayStats: function(cycle) {
-      J.set$innerHtml$x(document.querySelector("#grid-size"), H.S($.$get$rows()) + " x " + H.S($.$get$columns()));
+      var t1, t2;
+      t1 = $.$get$rows();
+      t2 = $.$get$columns();
+      if (typeof t1 !== "number")
+        return t1.$mul();
+      if (typeof t2 !== "number")
+        return H.iae(t2);
+      J.set$innerHtml$x(document.querySelector("#grid-size"), H.S($.$get$rows()) + " x " + H.S($.$get$columns()) + " (" + t1 * t2 + ")");
       J.set$innerHtml$x(document.querySelector("#total-cycles"), "Cycles: " + $.lifeCycles);
       J.set$innerHtml$x(document.querySelector("#length-of-cycle"), "Length of cycle: 0.03 second(s)");
       J.set$innerHtml$x(document.querySelector("#current-cycle"), "Cycle: " + $.cyclesSoFar);
     },
-    drawCell: function(x, y, living) {
-      var t1, t2, t3, color;
+    drawCell: function(x, y, isAlive) {
+      var t1, t2, t3, stopwatch, color;
       t1 = $.$get$drawWidth();
       t2 = $.border;
       if (typeof t1 !== "number")
         return t1.$add();
       t3 = $.$get$drawHeight();
-      color = living ? $.livingColor : $.deadColor;
-      J.set$fillStyle$x($.$get$context(), color);
-      J.fillRect$4$x($.$get$context(), x * (t1 + t2), y * (t1 + t2), t1, t3);
+      stopwatch = new P.Stopwatch(null, null);
+      H.Primitives_initTicker();
+      $.Stopwatch__frequency = $.Primitives_timerFrequency;
+      stopwatch.start$0(0);
+      color = isAlive ? $.livingColor : $.deadColor;
+      J.set$fillStyle$x(J.getContext$1$x(document.querySelector("#canvas"), "2d"), color);
+      J.fillRect$4$x(J.getContext$1$x(document.querySelector("#canvas"), "2d"), x * (t1 + t2), y * (t1 + t2), t1, t3);
+      stopwatch.stop$0(0);
+      $.$get$drawTimes().push(J.$tdiv$n(J.$mul$ns(stopwatch.get$elapsedTicks(), 1000000), $.Stopwatch__frequency));
     },
     getCanvas: function() {
       return document.querySelector("#canvas");
-    },
-    clear: function() {
-      J.clearRect$4$x($.$get$context(), 0, 0, $.$get$canvasWidth(), $.$get$canvasHeight());
     }
   }]];
   setupProgram(dart, 0);
@@ -7534,6 +7681,19 @@
       return receiver < a0;
     return J.getInterceptor$n(receiver).$lt(receiver, a0);
   };
+  J.$mul$ns = function(receiver, a0) {
+    if (typeof receiver == "number" && typeof a0 == "number")
+      return receiver * a0;
+    return J.getInterceptor$ns(receiver).$mul(receiver, a0);
+  };
+  J.$sub$n = function(receiver, a0) {
+    if (typeof receiver == "number" && typeof a0 == "number")
+      return receiver - a0;
+    return J.getInterceptor$n(receiver).$sub(receiver, a0);
+  };
+  J.$tdiv$n = function(receiver, a0) {
+    return J.getInterceptor$n(receiver).$tdiv(receiver, a0);
+  };
   J._addEventListener$3$x = function(receiver, a0, a1, a2) {
     return J.getInterceptor$x(receiver)._addEventListener$3(receiver, a0, a1, a2);
   };
@@ -7569,9 +7729,6 @@
   };
   J.toLowerCase$0$s = function(receiver) {
     return J.getInterceptor$s(receiver).toLowerCase$0(receiver);
-  };
-  J.translate$2$x = function(receiver, a0, a1) {
-    return J.getInterceptor$x(receiver).translate$2(receiver, a0, a1);
   };
   J.get$hashCode$ = function(receiver) {
     return J.getInterceptor(receiver).get$hashCode(receiver);
@@ -7748,6 +7905,8 @@
   C.List_yrN = H.setRuntimeTypeInfo(Isolate.makeConstantList(["A::href", "AREA::href", "BLOCKQUOTE::cite", "BODY::background", "COMMAND::icon", "DEL::cite", "FORM::action", "IMG::src", "INPUT::src", "INS::cite", "Q::cite", "VIDEO::poster"]), [P.String]);
   $.Primitives_mirrorFunctionCacheName = "$cachedFunction";
   $.Primitives_mirrorInvokeCacheName = "$cachedInvocation";
+  $.Primitives_timerFrequency = null;
+  $.Primitives_timerTicks = null;
   $.Closure_functionCounter = 0;
   $.BoundClosure_selfFieldNameCache = null;
   $.BoundClosure_receiverFieldNameCache = null;
@@ -7763,6 +7922,7 @@
   $._isInCallbackLoop = false;
   $.Zone__current = C.C__RootZone;
   $.Expando__keyCount = 0;
+  $.Stopwatch__frequency = null;
   $.Element__parseDocument = null;
   $.Element__parseRange = null;
   $.Element__defaultValidator = null;
@@ -7771,12 +7931,12 @@
   $.border = 1;
   $.livingColor = "orange";
   $.deadColor = "black";
-  $.cellSquare = 500;
+  $.cellSquare = 120;
   $.lifeCycles = 10000;
-  $.cyclesSoFar = 0;
   $.initPattern = O.patterns__patternRandom$closure();
   $.livingCells = 0;
-  $.cancel = false;
+  $.cyclesSoFar = 0;
+  $.isCancelled = null;
   $ = null;
   init.isHunkLoaded = function(hunkHash) {
     return !!$dart_deferred_initializers$[hunkHash];
@@ -7875,9 +8035,7 @@
     return P.LinkedHashSet_LinkedHashSet$from(["A", "ABBR", "ACRONYM", "ADDRESS", "AREA", "ARTICLE", "ASIDE", "AUDIO", "B", "BDI", "BDO", "BIG", "BLOCKQUOTE", "BR", "BUTTON", "CANVAS", "CAPTION", "CENTER", "CITE", "CODE", "COL", "COLGROUP", "COMMAND", "DATA", "DATALIST", "DD", "DEL", "DETAILS", "DFN", "DIR", "DIV", "DL", "DT", "EM", "FIELDSET", "FIGCAPTION", "FIGURE", "FONT", "FOOTER", "FORM", "H1", "H2", "H3", "H4", "H5", "H6", "HEADER", "HGROUP", "HR", "I", "IFRAME", "IMG", "INPUT", "INS", "KBD", "LABEL", "LEGEND", "LI", "MAP", "MARK", "MENU", "METER", "NAV", "NOBR", "OL", "OPTGROUP", "OPTION", "OUTPUT", "P", "PRE", "PROGRESS", "Q", "S", "SAMP", "SECTION", "SELECT", "SMALL", "SOURCE", "SPAN", "STRIKE", "STRONG", "SUB", "SUMMARY", "SUP", "TABLE", "TBODY", "TD", "TEXTAREA", "TFOOT", "TH", "THEAD", "TIME", "TR", "TRACK", "TT", "U", "UL", "VAR", "VIDEO", "WBR"], null);
   }, "_Html5NodeValidator__allowedElements", "_Html5NodeValidator__attributeValidators", "$get$_Html5NodeValidator__attributeValidators", function() {
     return P.LinkedHashMap__makeEmpty();
-  }, "_Html5NodeValidator__attributeValidators", "context", "$get$context", function() {
-    return J.getContext$1$x(K.getCanvas(), "2d");
-  }, "context", "canvasWidth", "$get$canvasWidth", function() {
+  }, "_Html5NodeValidator__attributeValidators", "canvasWidth", "$get$canvasWidth", function() {
     return J.get$width$x(K.getCanvas());
   }, "canvasWidth", "canvasHeight", "$get$canvasHeight", function() {
     return J.get$height$x(K.getCanvas());
@@ -7890,8 +8048,12 @@
   }, "rows", "columns", "$get$columns", function() {
     return $.cellSquare;
   }, "columns", "matrix", "$get$matrix", function() {
-    return H.setRuntimeTypeInfo([], [K.Cell]);
-  }, "matrix", "coordA", "$get$coordA", function() {
+    return [];
+  }, "matrix", "drawTimes", "$get$drawTimes", function() {
+    return [];
+  }, "drawTimes", "meetingTimes", "$get$meetingTimes", function() {
+    return [];
+  }, "meetingTimes", "coordA", "$get$coordA", function() {
     return P.LinkedHashMap__makeLiteral([0, 1, 0.25, 1, 0.5, 0, 0.75, -1, 1, -1, 1.25, -1, 1.5, 0, 1.75, 1]);
   }, "coordA", "coordB", "$get$coordB", function() {
     return P.LinkedHashMap__makeLiteral([0, 0, 0.25, -1, 0.5, -1, 0.75, -1, 1, 0, 1.25, 1, 1.5, 1, 1.75, 1]);
@@ -7899,7 +8061,7 @@
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
   init.metadata = [null];
-  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, v: true, args: [K.Cell]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, args: [,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [W.Node, W.Node]}];
+  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, v: true, args: [A.Cell]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, args: [,,]}, {func: 1, ret: P.String, args: [P.$int]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.String]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [,], opt: [,]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, v: true, args: [, P.String]}, {func: 1, ret: P.num}];
   function convertToFastObject(properties) {
     function MyClass() {
     }

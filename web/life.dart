@@ -2,8 +2,7 @@ library gameoflife;
 
 import 'globals.dart' as life;
 import 'ui.dart' as ui;
-
-import 'Cell.dart';
+import 'cell.dart';
 import 'dart:html';
 import 'dart:async';
 
@@ -14,23 +13,21 @@ import 'dart:async';
 /// [https://www.dartlang.org/docs/tutorials/using-polymer/]
 /// /usr/lib/dart/bin/dart2js --out=life.dart.js life.dart
 void main() {
-  print("Init() started....");
-
-  // ui.getCanvas().style.width = querySelector('#main').offsetWidth.toString();
-  // ui.getCanvas().style.height = querySelector('#main').offsetHeight.toString();
+  print("main() started....");
+  var stopwatch = new Stopwatch()..start();
 
   init();
 
   /// Event handler for 'Start' button.
   void clickStart(Event event) {
-    life.cancel = false;
+    life.isCancelled = false;
     lifeCycle(life.lifeCycles);
   }
   querySelector('#start').addEventListener('click', clickStart, false);
 
   /// Event handler for 'Pause' button.
   void clickPause(Event event) {
-    life.cancel = true;
+    life.isCancelled = true;
   }
   querySelector('#pause').addEventListener('click', clickPause, false);
 
@@ -38,8 +35,16 @@ void main() {
   void clickIncrement(Event event) {
     lifeCycle(1);
   }
-
   querySelector('#increment').addEventListener('click', clickIncrement, false);
+
+  void changeTime(Event event) {
+    // querySelector('#cycleTime').innerHtml = event.;
+    // life.sleepDuration = num.parse(querySelector('#cycleTime').innerHtml);
+    ui.displayStats(life.cyclesSoFar);
+  }
+  querySelector('#cycleTime')
+    ..addEventListener('change', changeTime, false)
+    ..innerHtml = life.getDurationInSeconds();
 
   /// Event handler for 'Pause' button.
   void clickReset(Event event) {
@@ -56,7 +61,23 @@ void main() {
 
   // loadDesigner();
 
-  print("Init() complete.");
+  void avg(var list, String type) {
+    num total = 0;
+    // print("$type: ${list.length}");
+    for (num time in list) {
+      total = total + time;
+    }
+    num avg = total / list.length;
+    print("$type average: ${avg} microseconds");
+  }
+
+  avg(life.drawTimes, "Draw");
+  avg(life.meetingTimes, "Meet");
+  // print("${life.drawTimes}");
+  // print("${life.meetingTimes}");
+
+  stopwatch.stop();
+  print("main() complete. ${stopwatch.elapsedMilliseconds} millliseconds");
   return;
 }
 
@@ -65,14 +86,22 @@ void init() {
   // Center canvas
   var cellsWide = (((life.drawWidth + life.border) * life.columns));
   var cellsHigh = (((life.drawHeight + life.border) * life.rows));
-  life.context.translate((life.canvasWidth / 2) - cellsWide / 2,
-      (life.canvasHeight / 2) - cellsHigh / 2);
+
+// center the canvas
+  // ui.getContext().translate((life.canvasWidth / 2) - cellsWide / 2,
+  //     (life.canvasHeight / 2) - cellsHigh / 2);
 
   // Scale the canvas?
-  var scaleSquare = 1;
-  var scaleWidth = scaleSquare;
-  var scaleHeight = scaleSquare;
-  life.context.scale(scaleWidth, scaleHeight);
+  print("Cells wide: ${cellsWide}");
+  print("Cells high: ${cellsHigh}");
+  print("ratio width: ${life.canvasWidth/cellsWide}");
+  print("ratio height: ${life.canvasHeight/cellsHigh}");
+  num ratioWidth = (life.canvasWidth / cellsWide);
+  num ratioHeight = (life.canvasHeight / cellsHigh);
+  num scaleSquare = 0.5;
+  num scaleWidth = ratioWidth;
+  num scaleHeight = ratioHeight;
+  ui.getContext().scale(scaleWidth, scaleHeight);
 
   // Create each cell
   initCells();
@@ -81,15 +110,14 @@ void init() {
 }
 
 /// Execute a lifecycle.
-void lifeCycle(int cycles) {
+void lifeCycle(num cycles) {
   void refresh() {
     /// Check for living neighbors
     void check(Cell cell) {
       cell.check();
-      // cell.grow();
     }
 
-    // Advance to the next state.
+    /// Advance to the next state.
     void grow(Cell cell) {
       cell.grow();
     }
@@ -105,9 +133,9 @@ void lifeCycle(int cycles) {
 
     life.cyclesSoFar++;
     if (life.livingCells == 0) {
-      life.cancel = true;
+      life.isCancelled = true;
     }
-    if ((!life.cancel) && (life.cyclesSoFar <= cycles)) {
+    if (life.notCancelled() && (life.cyclesSoFar <= cycles)) {
       new Future.delayed(life.sleepDuration, () {
         runCycle();
       });
@@ -125,10 +153,10 @@ void lifeCycle(int cycles) {
 void initCells() {
   Cell cell;
 
-  for (int y = 0; y < life.rows; y++) {
-    life.matrix.add(new List<Cell>());
+  for (num y = 0; y < life.rows; y++) {
+    life.matrix.add([]);
 
-    for (int x = 0; x < life.columns; x++) {
+    for (num x = 0; x < life.columns; x++) {
       life.matrix[y].add(new Cell());
       cell = life.matrix[y][x];
       cell.coordX = x;
@@ -144,11 +172,12 @@ void initCells() {
 
 /// Check immediate surroundings for existing neighbors.
 void meetTheNeighbors(Cell cell) {
+  var stopwatch = new Stopwatch()..start();
   double theta = 0.0;
 
   while (theta <= 1.75) {
-    int X = cell.coordX + life.coordA[theta];
-    int Y = cell.coordY + life.coordB[theta];
+    num X = cell.coordX + life.coordA[theta];
+    num Y = cell.coordY + life.coordB[theta];
 
     try {
       Cell N = life.matrix[Y][X];
@@ -159,6 +188,9 @@ void meetTheNeighbors(Cell cell) {
     theta = theta + 0.25;
   }
   cell.checkNeighbors();
+
+  stopwatch.stop();
+  life.meetingTimes.add(stopwatch.elapsedMicroseconds);
 }
 
 /// Iterate the matrix with the given function.
@@ -195,65 +227,66 @@ ${input}
 };
   ''';
 }
-
-/// Designer
-void loadDesigner() {
-  TextAreaElement code = querySelector('#code');
-  code.style.display = 'inherit';
-
-  Element grid = querySelector('#grid');
-  var list = new List<String>();
-
-  print('loading designer...');
-  for (int y = 0; y < life.rows; y++) {
-    TableRowElement row = new TableRowElement();
-    grid.append(row);
-
-    for (int x = 0; x < life.columns; x++) {
-      DivElement checkBox = new DivElement();
-      TableCellElement cell = new TableCellElement();
-      cell.append(checkBox);
-      row.append(cell);
-
-      checkBox.setInnerHtml("$x,$y");
-      checkBox.title = checkBox.innerHtml;
-      checkBox.setAttribute('checked', life.matrix[y][x].state.toString());
-      checkBox.classes.add('designerBox');
-
-      if (checkBox.getAttribute('checked') == "1") {
-        checkBox.style.background = life.livingColor;
-      } else {
-        checkBox.style.background = life.deadColor;
-      }
-
-      void clickDesigner(Event event) {
-        String temp = "";
-        if (checkBox.getAttribute('checked') == "1") {
-          list.remove(checkBox.innerHtml);
-          life.matrix[y][x].state = 0;
-          checkBox.style.background = life.deadColor;
-          checkBox.setAttribute('checked', life.matrix[y][x].state.toString());
-        } else {
-          list.add(checkBox.innerHtml);
-          life.matrix[y][x].state = 1;
-          checkBox.style.background = life.livingColor;
-          checkBox.setAttribute('checked', life.matrix[y][x].state.toString());
-        }
-        list.sort();
-
-        for (String line in list) {
-          if (list.last == line) {
-            // leave out the comma
-            temp = temp + "'$line': 1";
-          } else {
-            temp = temp + "'$line': 1,\n";
-          }
-        }
-        life.text.setInnerHtml(getText(temp));
-        display(life.cyclesSoFar);
-      }
-      checkBox.addEventListener('click', clickDesigner, false);
-    }
-  }
-  print('Done loading designer...');
-}
+//
+// /// Designer
+// void loadDesigner() {
+//   print('loading designer...');
+//   var stopwatch = new Stopwatch()..start();
+//   querySelector('#code').style.display = 'inherit';
+//
+//   var list = [];
+//
+//   for (num y = 0; y < life.rows; y++) {
+//     TableRowElement row = new TableRowElement();
+//     querySelector('#grid').append(row);
+//
+//     for (num x = 0; x < life.columns; x++) {
+//       DivElement checkBox = new DivElement();
+//       TableCellElement cell = new TableCellElement();
+//       cell.append(checkBox);
+//       row.append(cell);
+//
+//       checkBox.setInnerHtml("$x,$y");
+//       checkBox.title = checkBox.innerHtml;
+//       checkBox.setAttribute('checked', life.matrix[y][x].state.toString());
+//       checkBox.classes.add('designerBox');
+//
+//       if (checkBox.getAttribute('checked') == "1") {
+//         checkBox.style.background = life.livingColor;
+//       } else {
+//         checkBox.style.background = life.deadColor;
+//       }
+//
+//       void clickDesigner(Event event) {
+//         String temp = "";
+//         if (checkBox.getAttribute('checked') == "1") {
+//           list.remove(checkBox.innerHtml);
+//           life.matrix[y][x].state = 0;
+//           checkBox.style.background = life.deadColor;
+//           checkBox.setAttribute('checked', life.matrix[y][x].state.toString());
+//         } else {
+//           list.add(checkBox.innerHtml);
+//           life.matrix[y][x].state = 1;
+//           checkBox.style.background = life.livingColor;
+//           checkBox.setAttribute('checked', life.matrix[y][x].state.toString());
+//         }
+//         list.sort();
+//
+//         for (String line in list) {
+//           if (list.last == line) {
+//             // leave out the comma
+//             temp = temp + "'$line': 1";
+//           } else {
+//             temp = temp + "'$line': 1,\n";
+//           }
+//         }
+//         querySelector('#code').setInnerHtml(getText(temp));
+//         display(life.cyclesSoFar);
+//       }
+//       checkBox.addEventListener('click', clickDesigner, false);
+//     }
+//   }
+//   stopwatch.stop();
+//   print(
+//       'Done loading designer.  ${stopwatch.elapsedMilliseconds} millliseconds');
+// }

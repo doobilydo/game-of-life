@@ -1,47 +1,45 @@
 import 'ui.dart' as ui;
-import 'dart:html';
-import 'Cell.dart';
 import 'patterns.dart' as pattern;
-
-// UI variables
-var context = ui.getCanvas().getContext('2d');
 
 // canvas properties
 var canvasWidth = ui.getCanvas().width;
 var canvasHeight = ui.getCanvas().height;
-int drawSquare = 5;
-int drawWidth = drawSquare;
-int drawHeight = drawSquare;
-int border = 1;
+num drawSquare = 5;
+num drawWidth = drawSquare;
+num drawHeight = drawSquare;
+num border = 1;
 String livingColor = 'orange';
 String deadColor = 'black';
 
-Element stats = querySelector('#stats');
-
 // Data variables
-int cellSquare = 500;
-int rows = cellSquare; // Y
-int columns = cellSquare; // X
-int lifeCycles = 10000;
-int cyclesSoFar = 0;
-final sleepDuration = const Duration(milliseconds: 30);
+num cellSquare = 120;
+num rows = cellSquare; // Y
+num columns = cellSquare; // X
+num lifeCycles = 10000;
+var sleepDuration = const Duration(milliseconds: 30);
 
 // var initPattern = pattern.patternBlank;
 var initPattern = pattern.patternRandom; // Change initial pattern
-TextAreaElement text = querySelector('#code');
 
-int livingCells = 0;
-int lastCycle = 0;
-bool cancel = false;
+num livingCells = 0;
+num lastCycle = 0;
+num cyclesSoFar = 0;
+bool isCancelled;
+bool notCancelled() => !isCancelled;
 
-var matrix = new List<Cell>();
+/// List
+var matrix = [];
+
+// Performance stats
+var drawTimes = [];
+var meetingTimes = [];
 
 /// Return the sleep duration in seconds.
 String getDurationInSeconds() {
   return sleepDuration.inMilliseconds / 1000.0;
 }
 
-// X coordinate for rotating around a cell.
+/// X coordinate for rotating around a cell.
 var coordA = {
   0: 1,
   0.25: 1,
@@ -52,7 +50,8 @@ var coordA = {
   1.5: 0,
   1.75: 1
 };
-// Y coordinate for rotating around a cell.
+
+/// Y coordinate for rotating around a cell.
 var coordB = {
   0: 0,
   0.25: -1,

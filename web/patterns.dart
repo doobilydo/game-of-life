@@ -1,6 +1,9 @@
-import 'Cell.dart';
+import 'cell.dart';
 import 'dart:math';
 import 'globals.dart' as life;
+
+/// Patterns tested against:
+/// [http://www.bitstorm.org/gameoflife/]
 
 /// Testing with an Exploder.
 /// Successful.
@@ -78,6 +81,7 @@ void patternSmallExploder(Cell cell) {
 
 /// Testing with a Glider.
 /// Successful.
+/// (The Ant).
 void patternGlider(Cell cell) {
   var dict = {'20,20': 1, '21,20': 1, '22,20': 1, '22,19': 1, '21,18': 1};
 
@@ -88,6 +92,7 @@ void patternGlider(Cell cell) {
   } else {
     cell.state = 0;
   }
+  initCorners(cell);
 }
 
 /// Testing. 4x4 square.
@@ -131,8 +136,8 @@ void patternBlank(Cell cell) {
 
 /// Initialize the corners of the canvas as alive.
 void initCorners(Cell cell) {
-  int x = cell.coordX;
-  int y = cell.coordY;
+  num x = cell.coordX;
+  num y = cell.coordY;
   // Always initialize the corners as living.
   // So we can see them...
   if (x == 0 && y == 0) {
