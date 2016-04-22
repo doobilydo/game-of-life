@@ -7142,7 +7142,7 @@
     }, "call$0", "gameoflife__main$closure", 0, 0, 2],
     lifeCycle: function(cycles) {
       if ($.cyclesSoFar <= $.lifeCycles)
-        P.Future_Future$delayed(C.Duration_30000, new R.lifeCycle_closure(new R.lifeCycle_runCycle(cycles, new R.lifeCycle_refresh())), null);
+        P.Future_Future$delayed($.sleepDuration, new R.lifeCycle_closure(new R.lifeCycle_runCycle(cycles, new R.lifeCycle_refresh())), null);
     },
     initCells: function() {
       var cell, y, t1, x;
@@ -7313,7 +7313,7 @@
         if ($.livingCells === 0)
           $.isCancelled = true;
         if ($.isCancelled !== true && t1 <= this.cycles)
-          P.Future_Future$delayed(C.Duration_30000, new R.lifeCycle_runCycle_closure(this), null);
+          P.Future_Future$delayed($.sleepDuration, new R.lifeCycle_runCycle_closure(this), null);
       }
     },
     lifeCycle_runCycle_closure: {
@@ -7499,7 +7499,7 @@
         return H.iae(t2);
       J.set$innerHtml$x(document.querySelector("#grid-size"), H.S($.$get$rows()) + " x " + H.S($.$get$columns()) + " (" + t1 * t2 + ")");
       J.set$innerHtml$x(document.querySelector("#total-cycles"), "Cycles: " + $.lifeCycles);
-      J.set$innerHtml$x(document.querySelector("#length-of-cycle"), "Length of cycle: 0.03 second(s)");
+      J.set$innerHtml$x(document.querySelector("#length-of-cycle"), "Length of cycle: " + H.S(C.JSInt_methods._tdivFast$1($.sleepDuration._duration, 1000) / 1000) + " second(s)");
       J.set$innerHtml$x(document.querySelector("#current-cycle"), "Cycle: " + $.cyclesSoFar);
     },
     drawCell: function(x, y, isAlive) {
@@ -7933,6 +7933,7 @@
   $.deadColor = "black";
   $.cellSquare = 120;
   $.lifeCycles = 10000;
+  $.sleepDuration = C.Duration_30000;
   $.initPattern = O.patterns__patternRandom$closure();
   $.livingCells = 0;
   $.cyclesSoFar = 0;

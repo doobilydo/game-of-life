@@ -37,14 +37,14 @@ void main() {
   }
   querySelector('#increment').addEventListener('click', clickIncrement, false);
 
-  void changeTime(Event event) {
-    // querySelector('#cycleTime').innerHtml = event.;
-    // life.sleepDuration = num.parse(querySelector('#cycleTime').innerHtml);
-    ui.displayStats(life.cyclesSoFar);
-  }
-  querySelector('#cycleTime')
-    ..addEventListener('change', changeTime, false)
-    ..innerHtml = life.getDurationInSeconds();
+  // void changeTime(Event event) {
+  //   // querySelector('#cycleTime').innerHtml = event.;
+  //   // life.sleepDuration = num.parse(querySelector('#cycleTime').innerHtml);
+  //   ui.displayStats(life.cyclesSoFar);
+  // }
+  // querySelector('#cycleTime')
+  //   ..addEventListener('change', changeTime, false)
+  //   ..innerHtml = life.getDurationInSeconds();
 
   /// Event handler for 'Pause' button.
   void clickReset(Event event) {

@@ -1,8 +1,8 @@
-file:///home/lorax/github/game-of-life/web/cell.dart
-file:///home/lorax/github/game-of-life/web/globals.dart
-file:///home/lorax/github/game-of-life/web/life.dart
-file:///home/lorax/github/game-of-life/web/patterns.dart
-file:///home/lorax/github/game-of-life/web/ui.dart
+file:///home/lorax/github/game-of-life/cell.dart
+file:///home/lorax/github/game-of-life/globals.dart
+file:///home/lorax/github/game-of-life/life.dart
+file:///home/lorax/github/game-of-life/patterns.dart
+file:///home/lorax/github/game-of-life/ui.dart
 file:///usr/lib/dart/lib/_internal/js_runtime/lib/annotations.dart
 file:///usr/lib/dart/lib/_internal/js_runtime/lib/async_patch.dart
 file:///usr/lib/dart/lib/_internal/js_runtime/lib/collection_patch.dart
