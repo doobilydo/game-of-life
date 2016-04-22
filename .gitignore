@@ -59,5 +59,4 @@ target/
 # Dart
 .atom/
 .analysis_options
-.packages
-packages/
+packages/analyzer
